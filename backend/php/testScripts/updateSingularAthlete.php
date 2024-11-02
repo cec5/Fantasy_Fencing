@@ -3,6 +3,7 @@ require_once('../scraperFunctions.php');
 require_once('../databaseFunctions.php');
 
 // Adds/Updates a singular Athlete to the Database
+print_r("Database Update, Enter Athlete ID: ");
 $fencerID = readline();
 $result = scrapeFencerData($fencerID);
 

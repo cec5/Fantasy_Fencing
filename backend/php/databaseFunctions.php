@@ -34,11 +34,53 @@ function updateAthlete($data) {
 		$data['weapon'],
 		$data['weapon2']
     	);
-
+    	$athleteID = $data['id'];
     	if ($stmt->execute()) {
-        	echo "Athlete data stored successfully\n";
+        	echo "Data stored successfully for Athlete ID: [$athleteID]\n";
     	} else {
         	echo "Error storing athlete data: " . $stmt->error;
+    	}
+    	$stmt->close();
+    	$db->close();
+}
+
+// Adds/Updates Competition in local db
+function updateCompetition($data) {
+    	$db = dbConnect();
+    	$stmt = $db->prepare("
+        	INSERT INTO competitions (competitionId, season, name, category, weapon, gender, country, location, startDate, endDate)
+        	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        	ON DUPLICATE KEY UPDATE
+            		name = VALUES(name),
+            		category = VALUES(category),
+            		weapon = VALUES(weapon),
+            		gender = VALUES(gender),
+            		country = VALUES(country),
+            		location = VALUES(location),
+            		startDate = VALUES(startDate),
+           		endDate = VALUES(endDate)
+    	");
+    
+    	$stmt->bind_param(
+        	"iissssssss",
+        	$data['competitionId'],
+		$data['season'],
+		$data['name'],
+		$data['category'],
+		$data['weapon'],
+		$data['gender'],
+		$data['country'],
+		$data['location'],
+		$data['startDate'],
+		$data['endDate']
+   	);
+	
+	$season = $data['season'];
+	$competitionID = $data['competitionId'];
+    	if ($stmt->execute()) {
+        	echo "Data stored successfully for Competition: [$competitionID] of Season: [$season]\n";
+    	} else {
+        	echo "Error storing competition data: " . $stmt->error;
     	}
     	$stmt->close();
     	$db->close();

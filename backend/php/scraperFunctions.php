@@ -2,7 +2,7 @@
 // This file contains functions relating to scraping data from the FIE and returning it in an array
 
 require_once 'vendor/autoload.php';
-require_once 'countries.php';
+require_once 'dataArrays.php';
 use Smalot\PdfParser\Parser;
 
 // Fetches fencer data from the FIE website based on ID
@@ -113,5 +113,57 @@ function scrapeFencerData($fencerId) {
         	'weapon2' => $weapon2
     	];
     	return $data;
+}
+
+function scrapeCompetitionData($season, $competitionId) {
+    // Construct the URL for the competition page
+    $url = "https://fie.org/competitions/$season/$competitionId";
+    
+    // Initialize a cURL session
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    $html = curl_exec($ch);
+    curl_close($ch);
+
+    // Check if HTML request was successful
+    if (!$html || strpos($html, 'Error 404') !== false || strpos($html, 'Page not found') !== false) {
+        return null;
+    }
+
+    // Extract JSON data from the "window._competition" JavaScript variable
+    if (preg_match('/window\._competition\s*=\s*(\{.*?\});/', $html, $matches)) {
+        $competitionData = json_decode($matches[1], true);
+
+        // Check if JSON decoding was successful
+        if (!$competitionData) {
+            return null;
+        }
+
+        // Extract the gender by finding the first occurrence of "gender":"M" or "gender":"F"
+        $gender = null;
+        if (preg_match('/"gender":"(M|F)"/', $matches[1], $genderMatch)) {
+            $gender = ($genderMatch[1] === 'M') ? 'male' : 'female';
+        }
+
+        // Map the extracted data to the structure of the competitions table
+        $data = [
+            'competitionId' => $competitionData['competitionId'],
+            'season' => $competitionData['season'],
+            'name' => $competitionData['name'],
+            'category' => $competitionData['competitionCategory'],
+            'weapon' => strtolower($competitionData['weapon']) === 's' ? 'sabre' : (strtolower($competitionData['weapon']) === 'e' ? 'epee' : 'foil'),
+            'gender' => $gender,  // Use extracted gender
+            'country' => $competitionData['federation'],
+            'location' => $competitionData['location'],
+            'startDate' => $competitionData['startDate'],
+            'endDate' => $competitionData['endDate']
+        ];
+
+        return $data;
+    } else {
+        return null;  // Return null if the competition data is not found in the page
+    }
 }
 ?>

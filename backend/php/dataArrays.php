@@ -161,5 +161,12 @@ $validCountryCodes = [
     	"VIE" => "Vietnam",
     	"YEM" => "Yemen"
 ];
+$competitionCategories = [
+    	"SA" => "Satellite World Cup",
+    	"A" => "World Cup",
+    	"GP" => "Grand Prix",
+    	"CHZ" => "Zonal Championships",
+    	"CHM" => "World Championships",
+    	"JO" => "Olympic Games"
+];
 ?>
-
