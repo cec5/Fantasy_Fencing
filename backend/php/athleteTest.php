@@ -1,5 +1,5 @@
 <?php
-require_once('dataFunctions.php');
+require_once('scraperFunctions.php');
 
 // Test script for the retrieval of an athlete from the FIE website
 $fencerID = readline();

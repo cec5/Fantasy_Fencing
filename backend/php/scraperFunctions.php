@@ -86,7 +86,10 @@ function scrapeFencerData($fencerId) {
     	$nationality = '';
     	preg_match_all('/\b([A-Z]{3}|_AIN)\b/', $pdfText, $matches);
     	foreach ($matches[1] as $match) {
-        	if (array_key_exists($match, $validCountryCodes)) {
+    		if ($match === "_AIN"){
+    			$nationality = "AIN";
+    			break;
+    		} else if (array_key_exists($match, $validCountryCodes)) {
             		$nationality = $match;
             		break;
         	}

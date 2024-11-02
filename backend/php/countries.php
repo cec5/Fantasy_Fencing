@@ -1,7 +1,7 @@
 <?php
 $validCountryCodes = [
     	"AFG" => "Afghanistan",
-    	"_AIN" => "Neutral Athletes",
+    	"AIN" => "Neutral Athletes",
     	"ALB" => "Albania",
     	"ALG" => "Algeria",
     	"ANG" => "Angola",
