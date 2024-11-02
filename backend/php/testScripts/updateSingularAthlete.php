@@ -1,6 +1,6 @@
 <?php
-require_once('scraperFunctions.php');
-require_once('databaseFunctions.php');
+require_once('../scraperFunctions.php');
+require_once('../databaseFunctions.php');
 
 // Adds/Updates a singular Athlete to the Database
 $fencerID = readline();

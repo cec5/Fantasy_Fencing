@@ -1,7 +1,7 @@
 <?php
 // This file contains functions relating to scraping data from the FIE and returning it in an array
 
-require_once '../vendor/autoload.php';
+require_once 'vendor/autoload.php';
 require_once 'countries.php';
 use Smalot\PdfParser\Parser;
 
