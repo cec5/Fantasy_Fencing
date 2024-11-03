@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS athletes (
     	weapon2 ENUM('sabre', 'epee', 'foil') DEFAULT NULL,
     	isActive BOOLEAN DEFAULT FALSE
 );
-
+/* Stores Competition Data */
 CREATE TABLE IF NOT EXISTS competitions (
     	competitionId INT NOT NULL,
     	season INT NOT NULL,
@@ -23,4 +23,15 @@ CREATE TABLE IF NOT EXISTS competitions (
     	startDate DATE NOT NULL,
     	endDate DATE,
     	PRIMARY KEY (competitionId, season) 
+);
+/* Stores Competition Results */
+CREATE TABLE IF NOT EXISTS competitionResults (
+    	season INT NOT NULL,
+    	competitionId INT NOT NULL,
+    	fencerId INT NOT NULL,
+    	finished INT NOT NULL,
+    	points DOUBLE NOT NULL,
+    	PRIMARY KEY (competitionId, season, fencerId),
+    	FOREIGN KEY (competitionId, season) REFERENCES competitions(competitionId, season) ON DELETE CASCADE,
+   	FOREIGN KEY (fencerId) REFERENCES athletes(id) ON DELETE CASCADE
 );

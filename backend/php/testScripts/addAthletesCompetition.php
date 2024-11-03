@@ -14,7 +14,17 @@ if (!$result){
 } else {
 	foreach ($result as $x){
 		$y = scrapeAthleteData($x);
-		updateAthlete($y);
+		if ($y){
+            		try{
+                		updateAthlete($y);
+                		//echo "Successfully added/updated athlete ID $x.\n";
+            		} catch (Exception $e) {
+                		echo "Failed to insert/update athlete ID $x: " . $e->getMessage() . "\n";
+            		}
+        	} else {
+            		// Log the skipped athlete due to missing or incomplete data
+            		echo "Skipping athlete ID $x due to missing or incomplete data.\n";
+		}
 	}
 }
 ?>

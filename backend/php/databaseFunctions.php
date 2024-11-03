@@ -85,4 +85,68 @@ function updateCompetition($data) {
     	$stmt->close();
     	$db->close();
 }
+
+function updateCompetitionResults($results) {
+    	$db = dbConnect();
+
+    	// Prepare the insertion statement
+    	$stmt = $db->prepare("
+        	INSERT INTO competitionResults (competitionId, season, fencerId, finished, points)
+        	VALUES (?, ?, ?, ?, ?)
+        	ON DUPLICATE KEY UPDATE
+            		finished = VALUES(finished),
+            		points = VALUES(points)
+    	");
+
+    	if (!$stmt) {
+        	echo "Preparation failed: (" . $db->errno . ") " . $db->error;
+        	return;
+    	}
+
+    	foreach ($results as $result) {
+        	try {
+            		// Check if the athlete exists before inserting the result
+            		if (!athleteExists($result['fencerId'])) {
+                		echo "Skipping result for fencer ID " . $result['fencerId'] . " as they do not exist in the database.\n";
+                		continue;
+            		}
+
+            		// Bind parameters and execute the insertion
+            		$stmt->bind_param(
+                		"iiidd",
+               		 	$result['competitionId'],
+                		$result['season'],
+                		$result['fencerId'],
+                		$result['finished'],
+                		$result['points']
+            		);
+
+            		if (!$stmt->execute()) {
+                		throw new mysqli_sql_exception("Error inserting/updating result for fencer ID " . $result['fencerId'] . ": " . $stmt->error);
+            		} else {
+                		echo "Inserted/updated result for fencer ID " . $result['fencerId'] . "\n";
+            		}
+        	} catch (mysqli_sql_exception $e) {
+            		// Catch and log the error without stopping the script
+            		echo "Exception caught: " . $e->getMessage() . "\n";
+        	}
+    	}
+    		$stmt->close();
+    		$db->close();
+}
+
+function athleteExists($fencerId) {
+    	$db = dbConnect();
+    
+    	$stmt = $db->prepare("SELECT 1 FROM athletes WHERE id = ?");
+    	$stmt->bind_param("i", $fencerId);
+    	$stmt->execute();
+    	$stmt->store_result();
+    
+    	$exists = $stmt->num_rows > 0;
+    
+    	$stmt->close();
+    	$db->close();
+    	return $exists;
+}
 ?>

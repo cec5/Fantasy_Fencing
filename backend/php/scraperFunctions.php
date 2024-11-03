@@ -73,8 +73,9 @@ function scrapeAthleteData($fencerId) {
 
     	// Retrieve PDF content for nationality and gender information
     	$pdfContent = @file_get_contents($basePdfUrl);
-    	if ($pdfContent === false) {
-        	return "Error: Unable to retrieve PDF content for fencer ID $fencerId.";
+    	if ($pdfContent === false || empty($pdfContent)) {
+        	echo "Warning: No PDF content found for fencer ID $fencerId. Skipping.\n";
+        	return null;  // Skip this athlete if PDF content is empty
     	}
 
     	// Parse PDF content
@@ -116,95 +117,137 @@ function scrapeAthleteData($fencerId) {
 }
 
 function scrapeCompetitionData($season, $competitionId) {
-    // Construct the URL for the competition page
-    $url = "https://fie.org/competitions/$season/$competitionId";
+    	// Construct the URL for the competition page
+    	$url = "https://fie.org/competitions/$season/$competitionId";
     
-    // Initialize a cURL session
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    $html = curl_exec($ch);
-    curl_close($ch);
+    	// Initialize a cURL session
+   	$ch = curl_init();
+    	curl_setopt($ch, CURLOPT_URL, $url);
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    	$html = curl_exec($ch);
+    	curl_close($ch);
 
-    // Check if HTML request was successful
-    if (!$html || strpos($html, 'Error 404') !== false || strpos($html, 'Page not found') !== false) {
-        return null;
-    }
+    	// Check if HTML request was successful
+    	if (!$html || strpos($html, 'Error 404') !== false || strpos($html, 'Page not found') !== false) {
+        	return null;
+    	}
 
-    // Extract JSON data from the "window._competition" JavaScript variable
-    if (preg_match('/window\._competition\s*=\s*(\{.*?\});/', $html, $matches)) {
-        $competitionData = json_decode($matches[1], true);
+    	// Extract JSON data from the "window._competition" JavaScript variable
+    	if (preg_match('/window\._competition\s*=\s*(\{.*?\});/', $html, $matches)) {
+        	$competitionData = json_decode($matches[1], true);
 
-        // Check if JSON decoding was successful
-        if (!$competitionData) {
-            return null;
-        }
+        	// Check if JSON decoding was successful
+        	if (!$competitionData) {
+            		return null;
+        	}
 
-        // Extract the gender by finding the first occurrence of "gender":"M" or "gender":"F"
-        $gender = null;
-        if (preg_match('/"gender":"(M|F)"/', $matches[1], $genderMatch)) {
-            $gender = ($genderMatch[1] === 'M') ? 'male' : 'female';
-        }
+        	// Extract the gender by finding the first occurrence of "gender":"M" or "gender":"F"
+        	$gender = null;
+        	if (preg_match('/"gender":"(M|F)"/', $matches[1], $genderMatch)) {
+            		$gender = ($genderMatch[1] === 'M') ? 'male' : 'female';
+        	}
 
-        // Map the extracted data to the structure of the competitions table
-        $data = [
-            'competitionId' => $competitionData['competitionId'],
-            'season' => $competitionData['season'],
-            'name' => $competitionData['name'],
-            'category' => $competitionData['competitionCategory'],
-            'weapon' => strtolower($competitionData['weapon']) === 's' ? 'sabre' : (strtolower($competitionData['weapon']) === 'e' ? 'epee' : 'foil'),
-            'gender' => $gender,  // Use extracted gender
-            'country' => $competitionData['federation'],
-            'location' => $competitionData['location'],
-            'startDate' => $competitionData['startDate'],
-            'endDate' => $competitionData['endDate']
-        ];
-
-        return $data;
-    } else {
-        return null;  // Return null if the competition data is not found in the page
-    }
+        	// Map the extracted data to the structure of the competitions table
+        	$data = [
+            		'competitionId' => $competitionData['competitionId'],
+            		'season' => $competitionData['season'],
+            		'name' => $competitionData['name'],
+            		'category' => $competitionData['competitionCategory'],
+            		'weapon' => strtolower($competitionData['weapon']) === 's' ? 'sabre' : (strtolower($competitionData['weapon']) === 'e' ? 'epee' : 'foil'),
+            		'gender' => $gender,  // Use extracted gender
+            		'country' => $competitionData['federation'],
+            		'location' => $competitionData['location'],
+            		'startDate' => $competitionData['startDate'],
+           		'endDate' => $competitionData['endDate']
+        	];
+        	return $data;
+    	} else {
+        	return null;  // Return null if the competition data is not found in the page
+    	}
 }
 
 // Fetches array of Athlete IDs who competed in a particular tournament
 function scrapeAthletesCompetition($season, $competitionId) {
-    // Construct the URL for the competition page
-    $url = "https://fie.org/competitions/$season/$competitionId";
+    	// Construct the URL for the competition page
+    	$url = "https://fie.org/competitions/$season/$competitionId";
 
-    // Initialize a cURL session
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    $html = curl_exec($ch);
-    curl_close($ch);
+    	// Initialize a cURL session
+    	$ch = curl_init();
+    	curl_setopt($ch, CURLOPT_URL, $url);
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    	$html = curl_exec($ch);
+    	curl_close($ch);
 
-    // Check if HTML request was successful
-    if (!$html || strpos($html, 'Error 404') !== false || strpos($html, 'Page not found') !== false) {
-        return null;
-    }
+    	// Check if HTML request was successful
+    	if (!$html || strpos($html, 'Error 404') !== false || strpos($html, 'Page not found') !== false) {
+        	return null;
+    	}
 
-    // Extract JSON data from the "window._athletes" JavaScript variable
-    if (preg_match('/window\._athletes\s*=\s*(\[[^\]]*\]);/', $html, $matches)) {
-        $athletesData = json_decode($matches[1], true);
+    	// Extract JSON data from the "window._athletes" JavaScript variable
+    	if (preg_match('/window\._athletes\s*=\s*(\[[^\]]*\]);/', $html, $matches)) {
+        	$athletesData = json_decode($matches[1], true);
 
-        // Check if JSON decoding was successful
-        if (!$athletesData) {
-            return null;
-        }
+        	// Check if JSON decoding was successful
+        	if (!$athletesData) {
+            		return null;
+        	}
 
-        // Extract athlete IDs
-        $athleteIds = [];
-        foreach ($athletesData as $athlete) {
-            if (isset($athlete['fencer']['id'])) {
-                $athleteIds[] = $athlete['fencer']['id'];
-            }
-        }
+        	// Extract athlete IDs
+        	$athleteIds = [];
+        	foreach ($athletesData as $athlete) {
+            		if (isset($athlete['fencer']['id'])) {
+                		$athleteIds[] = $athlete['fencer']['id'];
+            		}
+        	}
+        	return $athleteIds;
+    	} else {
+        	return null;  // Return null if the athlete data is not found in the page
+    	}
+}
 
-        return $athleteIds;
-    } else {
-        return null;  // Return null if the athlete data is not found in the page
-    }
+function scrapeCompetitionResults($season, $competitionId) {
+    	// Construct the URL for the competition page
+    	$url = "https://fie.org/competitions/$season/$competitionId";
+
+    	// Initialize a cURL session
+    	$ch = curl_init();
+    	curl_setopt($ch, CURLOPT_URL, $url);
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    	$html = curl_exec($ch);
+    	curl_close($ch);
+
+    	// Check if HTML request was successful
+    	if (!$html || strpos($html, 'Error 404') !== false || strpos($html, 'Page not found') !== false) {
+        	return null;
+    	}
+
+    	// Extract JSON data from the "window._athletes" JavaScript variable
+    	if (preg_match('/window\._athletes\s*=\s*(\[[^\]]*\]);/', $html, $matches)) {
+        	$athletesData = json_decode($matches[1], true);
+        	// Check if JSON decoding was successful
+        	if (!$athletesData) {
+            		return null;
+        	}
+
+        	// Extract the relevant data for each athlete
+        	$competitionResults = [];
+        	foreach ($athletesData as $athlete) {
+            		if (isset($athlete['fencer']['id']) && isset($athlete['rank']) && isset($athlete['points'])) {
+                		$competitionResults[] = [
+                    			'competitionId' => $competitionId,
+                    			'season' => $season,
+                    			'fencerId' => $athlete['fencer']['id'],
+                    			'finished' => $athlete['rank'],
+                    			'points' => $athlete['points']
+                		];
+            		}
+        	}
+        	return $competitionResults;
+    	} else {
+        	return null;  // Return null if the athlete data is not found in the page
+    	}
 }
 ?>
