@@ -6,7 +6,7 @@ require_once 'dataArrays.php';
 use Smalot\PdfParser\Parser;
 
 // Fetches fencer data from the FIE website based on ID
-function scrapeFencerData($fencerId) {
+function scrapeAthleteData($fencerId) {
 
 	global $validCountryCodes;
 
@@ -164,6 +164,47 @@ function scrapeCompetitionData($season, $competitionId) {
         return $data;
     } else {
         return null;  // Return null if the competition data is not found in the page
+    }
+}
+
+// Fetches array of Athlete IDs who competed in a particular tournament
+function scrapeAthletesCompetition($season, $competitionId) {
+    // Construct the URL for the competition page
+    $url = "https://fie.org/competitions/$season/$competitionId";
+
+    // Initialize a cURL session
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    $html = curl_exec($ch);
+    curl_close($ch);
+
+    // Check if HTML request was successful
+    if (!$html || strpos($html, 'Error 404') !== false || strpos($html, 'Page not found') !== false) {
+        return null;
+    }
+
+    // Extract JSON data from the "window._athletes" JavaScript variable
+    if (preg_match('/window\._athletes\s*=\s*(\[[^\]]*\]);/', $html, $matches)) {
+        $athletesData = json_decode($matches[1], true);
+
+        // Check if JSON decoding was successful
+        if (!$athletesData) {
+            return null;
+        }
+
+        // Extract athlete IDs
+        $athleteIds = [];
+        foreach ($athletesData as $athlete) {
+            if (isset($athlete['fencer']['id'])) {
+                $athleteIds[] = $athlete['fencer']['id'];
+            }
+        }
+
+        return $athleteIds;
+    } else {
+        return null;  // Return null if the athlete data is not found in the page
     }
 }
 ?>
