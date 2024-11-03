@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS athletes (
 );
 /* Stores Competition Data */
 CREATE TABLE IF NOT EXISTS competitions (
-    	competitionId INT NOT NULL,
     	season INT NOT NULL,
+    	competitionId INT NOT NULL,
     	name VARCHAR(100) NOT NULL,
     	category VARCHAR(5) NOT NULL,
     	weapon ENUM('sabre', 'epee', 'foil') NOT NULL,

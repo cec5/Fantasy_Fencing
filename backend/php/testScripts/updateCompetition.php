@@ -3,7 +3,7 @@ require_once('../scraperFunctions.php');
 require_once('../databaseFunctions.php');
 
 // Adds/Updates a competition to the Database
-print_r("Database Update, Enter Season: ");
+print_r("Add Competition Data, Enter Season: ");
 $season = readline();
 print_r("Enter Competition ID: ");
 $id = readline();
