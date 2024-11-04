@@ -1,8 +1,8 @@
 <?php
 // Common Function to Initialize MySQLi Connection
-function dbConnect(){
+function dbConnect() {
 	$db = new mysqli('localhost', 'admin', 'fantasyFencing', 'fencing');
-	if ($db->connect_error){
+	if ($db->connect_error) {
 		die("Connection failed: " . $db->connect_error);
 	}
 	return $db;
@@ -192,5 +192,45 @@ function searchAthletes($name = '', $gender = '', $weapon = '', $country = '') {
     	$stmt->close();
     	$db->close();
     	return $athletes;
+}
+
+function updateAthleteSeasonPoints($season) {
+    	$db = dbConnect();
+
+ 	// Calculate total points per athlete for the given season from competitionResults
+    	$query = "
+        	SELECT athleteId, SUM(points) as totalPoints
+        	FROM competitionResults
+        	WHERE season = ?
+        	GROUP BY athleteId
+    	";
+    	$stmt = $db->prepare($query);
+   	$stmt->bind_param("i", $season);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+
+    	// Insert or update each athlete's total points in athleteSeasonPoints
+    	$updateQuery = "
+        	INSERT INTO athleteSeasonPoints (athleteId, season, points)
+        	VALUES (?, ?, ?)
+        	ON DUPLICATE KEY UPDATE points = VALUES(points)
+    	";
+    	$updateStmt = $db->prepare($updateQuery);
+
+    	// Loop through each athlete's total points and update athleteSeasonPoints
+    	while ($row = $result->fetch_assoc()) {
+        	$athleteId = $row['athleteId'];
+        	$totalPoints = $row['totalPoints'];
+
+        	$updateStmt->bind_param("iid", $athleteId, $season, $totalPoints);
+        	if ($updateStmt->execute()) {
+            		echo "Updated total points for Athlete ID: [$athleteId] in Season: [$season] to [$totalPoints] points\n";
+        	} else {
+            		echo "Error updating points for Athlete ID: [$athleteId]: " . $updateStmt->error . "\n";
+        	}
+    	}
+    	$stmt->close();
+    	$updateStmt->close();
+    	$db->close();
 }
 ?>
