@@ -31,14 +31,14 @@ $weapon2 = readline();
 $weapon2 = $weapon2 ?: null;
 
 $athleteData = [
-    'id' => (int) $id,
-    'name' => $name,
-    'firstName' => $firstName,
-    'lastName' => $lastName,
-    'gender' => $gender,
-    'nationality' => strtoupper($nationality),
-    'weapon' => $weapon,
-    'weapon2' => $weapon2
+        'id' => (int) $id,
+        'name' => $name,
+        'firstName' => $firstName,
+        'lastName' => $lastName,
+        'gender' => $gender,
+        'nationality' => strtoupper($nationality),
+        'weapon' => $weapon,
+        'weapon2' => $weapon2
 ];
 
 try {
