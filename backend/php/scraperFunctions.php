@@ -117,7 +117,6 @@ function scrapeAthleteData($fencerId) {
 }
 
 function scrapeCompetitionData($season, $competitionId) {
-    	// Construct the URL for the competition page
     	$url = "https://fie.org/competitions/$season/$competitionId";
     
     	// Initialize a cURL session
@@ -169,7 +168,6 @@ function scrapeCompetitionData($season, $competitionId) {
 
 // Fetches array of Athlete IDs who competed in a particular tournament
 function scrapeAthletesCompetition($season, $competitionId) {
-    	// Construct the URL for the competition page
     	$url = "https://fie.org/competitions/$season/$competitionId";
 
     	// Initialize a cURL session
@@ -208,7 +206,6 @@ function scrapeAthletesCompetition($season, $competitionId) {
 }
 
 function scrapeCompetitionResults($season, $competitionId) {
-    	// Construct the URL for the competition page
     	$url = "https://fie.org/competitions/$season/$competitionId";
 
     	// Initialize a cURL session
@@ -239,7 +236,7 @@ function scrapeCompetitionResults($season, $competitionId) {
                 		$competitionResults[] = [
                     			'competitionId' => $competitionId,
                     			'season' => $season,
-                    			'fencerId' => $athlete['fencer']['id'],
+                    			'athleteId' => $athlete['fencer']['id'],
                     			'finished' => $athlete['rank'],
                     			'points' => $athlete['points']
                 		];

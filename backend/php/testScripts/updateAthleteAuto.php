@@ -8,7 +8,7 @@ $fencerID = readline();
 $result = scrapeAthleteData($fencerID);
 
 if (!$result){
-	print_r("Unable to add to database as there's no athlete associated with ID: $fencerID\n");
+	print_r("Unable to add to database as there's no Athlete associated with ID: [$fencerID]\n");
 } else {
 	updateAthlete($result);
 }

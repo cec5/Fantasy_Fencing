@@ -91,7 +91,7 @@ function updateCompetitionResults($results) {
 
     	// Prepare the insertion statement
     	$stmt = $db->prepare("
-        	INSERT INTO competitionResults (competitionId, season, fencerId, finished, points)
+        	INSERT INTO competitionResults (competitionId, season, athleteId, finished, points)
         	VALUES (?, ?, ?, ?, ?)
         	ON DUPLICATE KEY UPDATE
             		finished = VALUES(finished),
@@ -106,8 +106,8 @@ function updateCompetitionResults($results) {
     	foreach ($results as $result) {
         	try {
             		// Check if the athlete exists before inserting the result
-            		if (!athleteExists($result['fencerId'])) {
-                		echo "Skipping result for fencer ID " . $result['fencerId'] . " as they do not exist in the database.\n";
+            		if (!athleteExists($result['athleteId'])) {
+                		echo "Skipping result for Athlete ID: [" . $result['athleteId'] . "] as they do not exist in the database.\n";
                 		continue;
             		}
 
@@ -116,15 +116,15 @@ function updateCompetitionResults($results) {
                 		"iiidd",
                		 	$result['competitionId'],
                 		$result['season'],
-                		$result['fencerId'],
+                		$result['athleteId'],
                 		$result['finished'],
                 		$result['points']
             		);
 
             		if (!$stmt->execute()) {
-                		throw new mysqli_sql_exception("Error inserting/updating result for fencer ID " . $result['fencerId'] . ": " . $stmt->error);
+                		throw new mysqli_sql_exception("Error inserting/updating result for athlete ID " . $result['athleteId'] . ": " . $stmt->error);
             		} else {
-                		echo "Inserted/updated result for fencer ID " . $result['fencerId'] . "\n";
+                		echo "Inserted/updated result for Athlete ID: [" . $result['athleteId'] . "]\n";
             		}
         	} catch (mysqli_sql_exception $e) {
             		// Catch and log the error without stopping the script
@@ -135,11 +135,11 @@ function updateCompetitionResults($results) {
     		$db->close();
 }
 
-function athleteExists($fencerId) {
+function athleteExists($athleteId) {
     	$db = dbConnect();
     
     	$stmt = $db->prepare("SELECT 1 FROM athletes WHERE id = ?");
-    	$stmt->bind_param("i", $fencerId);
+    	$stmt->bind_param("i", $athleteId);
     	$stmt->execute();
     	$stmt->store_result();
     

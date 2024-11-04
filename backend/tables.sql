@@ -28,10 +28,18 @@ CREATE TABLE IF NOT EXISTS competitions (
 CREATE TABLE IF NOT EXISTS competitionResults (
     	season INT NOT NULL,
     	competitionId INT NOT NULL,
-    	fencerId INT NOT NULL,
+    	athleteId INT NOT NULL,
     	finished INT NOT NULL,
     	points DOUBLE NOT NULL,
-    	PRIMARY KEY (competitionId, season, fencerId),
+    	PRIMARY KEY (competitionId, season, athleteId),
     	FOREIGN KEY (competitionId, season) REFERENCES competitions(competitionId, season) ON DELETE CASCADE,
-   	FOREIGN KEY (fencerId) REFERENCES athletes(id) ON DELETE CASCADE
+   	FOREIGN KEY (athleteId) REFERENCES athletes(id) ON DELETE CASCADE
+);
+/* Stores Total Points Earned by Athlete per Season */
+CREATE TABLE IF NOT EXISTS athleteSeasonPoints (
+    	athleteId INT NOT NULL,
+    	season INT NOT NULL,
+   	points DOUBLE NOT NULL DEFAULT 0,
+    	PRIMARY KEY (athleteId, season),
+    	FOREIGN KEY (athleteId) REFERENCES athletes(id) ON DELETE CASCADE
 );
