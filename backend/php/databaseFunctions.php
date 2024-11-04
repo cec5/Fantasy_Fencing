@@ -149,4 +149,48 @@ function athleteExists($fencerId) {
     	$db->close();
     	return $exists;
 }
+
+function searchAthletes($name = '', $gender = '', $weapon = '', $country = '') {
+    	$db = dbConnect();
+    	$query = "SELECT id, name, gender, weapon, weapon2, nationality FROM athletes WHERE 1=1";
+    	$params = [];
+    	$types = '';
+
+    	if ($name) {
+        	$query .= " AND name LIKE ?";
+        	$params[] = '%' . $name . '%';
+        	$types .= 's';
+    	}
+    	if ($gender) {
+        	$query .= " AND gender = ?";
+        	$params[] = $gender;
+        	$types .= 's';
+    	}
+    	if ($weapon) {
+        	$query .= " AND (weapon = ? OR weapon2 = ?)";
+        	$params[] = $weapon;
+        	$params[] = $weapon;
+        	$types .= 'ss';
+    	}
+   	if ($country) {
+        	$query .= " AND nationality = ?";
+        	$params[] = strtoupper($country);
+        	$types .= 's';
+    	}
+
+    	$stmt = $db->prepare($query);
+    	if ($types) {
+        	$stmt->bind_param($types, ...$params);
+    	}
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+    
+    	$athletes = [];
+    	while ($row = $result->fetch_assoc()) {
+        	$athletes[] = $row;
+    	}
+    	$stmt->close();
+    	$db->close();
+    	return $athletes;
+}
 ?>
