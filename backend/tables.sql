@@ -35,11 +35,12 @@ CREATE TABLE IF NOT EXISTS competitionResults (
     	FOREIGN KEY (competitionId, season) REFERENCES competitions(competitionId, season) ON DELETE CASCADE,
    	FOREIGN KEY (athleteId) REFERENCES athletes(id) ON DELETE CASCADE
 );
-/* Stores Total Points Earned by Athlete per Season */
+/* Stores Total Points Earned by Athlete per Season and Weapon*/
 CREATE TABLE IF NOT EXISTS athleteSeasonPoints (
     	athleteId INT NOT NULL,
     	season INT NOT NULL,
-   	points DOUBLE NOT NULL DEFAULT 0,
-    	PRIMARY KEY (athleteId, season),
+    	weapon ENUM('sabre', 'epee', 'foil') NOT NULL,
+    	points DOUBLE NOT NULL DEFAULT 0,
+    	PRIMARY KEY (athleteId, season, weapon),
     	FOREIGN KEY (athleteId) REFERENCES athletes(id) ON DELETE CASCADE
 );

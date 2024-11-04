@@ -197,36 +197,38 @@ function searchAthletes($name = '', $gender = '', $weapon = '', $country = '') {
 function updateAthleteSeasonPoints($season) {
     	$db = dbConnect();
 
- 	// Calculate total points per athlete for the given season from competitionResults
+    	// Calculate total points per athlete and weapon for the given season by joining with competitions
     	$query = "
-        	SELECT athleteId, SUM(points) as totalPoints
-        	FROM competitionResults
-        	WHERE season = ?
-        	GROUP BY athleteId
+        	SELECT cr.athleteId, c.weapon, SUM(cr.points) as totalPoints
+        	FROM competitionResults cr
+        	JOIN competitions c ON cr.competitionId = c.competitionId AND cr.season = c.season
+        	WHERE cr.season = ?
+        	GROUP BY cr.athleteId, c.weapon
     	";
     	$stmt = $db->prepare($query);
-   	$stmt->bind_param("i", $season);
+    	$stmt->bind_param("i", $season);
     	$stmt->execute();
     	$result = $stmt->get_result();
 
-    	// Insert or update each athlete's total points in athleteSeasonPoints
+    	// Insert or update each athlete's total points by weapon in athleteSeasonPoints
     	$updateQuery = "
-        	INSERT INTO athleteSeasonPoints (athleteId, season, points)
-        	VALUES (?, ?, ?)
+        	INSERT INTO athleteSeasonPoints (athleteId, season, weapon, points)
+        	VALUES (?, ?, ?, ?)
         	ON DUPLICATE KEY UPDATE points = VALUES(points)
     	";
     	$updateStmt = $db->prepare($updateQuery);
 
-    	// Loop through each athlete's total points and update athleteSeasonPoints
+    	// Loop through each athlete's total points per weapon and update athleteSeasonPoints
     	while ($row = $result->fetch_assoc()) {
         	$athleteId = $row['athleteId'];
+        	$weapon = $row['weapon'];
         	$totalPoints = $row['totalPoints'];
 
-        	$updateStmt->bind_param("iid", $athleteId, $season, $totalPoints);
+        	$updateStmt->bind_param("iisd", $athleteId, $season, $weapon, $totalPoints);
         	if ($updateStmt->execute()) {
-            		echo "Updated total points for Athlete ID: [$athleteId] in Season: [$season] to [$totalPoints] points\n";
+            		echo "Updated total points for athlete ID: [$athleteId] in Season [$season] in [$weapon] to [$totalPoints] points\n";
         	} else {
-            		echo "Error updating points for Athlete ID: [$athleteId]: " . $updateStmt->error . "\n";
+            		echo "Error updating points for athlete ID [$athleteId]: " . $updateStmt->error . "\n";
         	}
     	}
     	$stmt->close();
