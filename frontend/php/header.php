@@ -17,8 +17,13 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="searchAthletes.php">Athletes</a>
+                    <!-- Dropdown for Athletes -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="athleteDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">View Athletes</a>
+                        <ul class="dropdown-menu" aria-labelledby="athleteDropdown">
+                            <li><a class="dropdown-item" href="searchAthletes.php">Search Athletes</a></li>
+                            <li><a class="dropdown-item" href="leaders.php">Points Leaders</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>

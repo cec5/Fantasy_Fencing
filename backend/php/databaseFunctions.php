@@ -291,4 +291,30 @@ function getCompetitionResults($athleteId, $season, $weapon) {
     	$db->close();
     	return $results;
 }
+
+// Get top point earners for a given season, weapon, and gender
+function getTopEarners($season, $weapon, $gender) {
+    	$db = dbConnect();
+    
+    	$query = "
+        	SELECT a.id, a.name, a.nationality, asp.points
+        	FROM athleteSeasonPoints asp
+        	JOIN athletes a ON asp.athleteId = a.id
+        	WHERE asp.season = ? AND asp.weapon = ? AND a.gender = ?
+        	ORDER BY asp.points DESC, a.name ASC
+    	";
+    
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param("iss", $season, $weapon, $gender);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+    
+    	$athletes = [];
+    	while ($row = $result->fetch_assoc()) {
+        	$athletes[] = $row;
+    	}
+    	$stmt->close();
+   	$db->close(); 
+    	return $athletes;
+}
 ?>
