@@ -2,7 +2,7 @@
 include 'header.php'; 
 include '../../backend/php/dataArrays.php';
 include '../../backend/php/databaseFunctions.php';
-include '../../backend/php/otherFunctions.php'; // Include for getFlagEmoji function
+include '../../backend/php/otherFunctions.php';
 
 // Get athlete ID from URL
 $athleteId = $_GET['id'];
