@@ -1,12 +1,6 @@
 <?php
-// Common Function to Initialize MySQLi Connection
-function dbConnect() {
-	$db = new mysqli('localhost', 'admin', 'fantasyFencing', 'fencing');
-	if ($db->connect_error) {
-		die("Connection failed: " . $db->connect_error);
-	}
-	return $db;
-}
+
+require_once('dbConnect.php');
 
 // Adds/Updates Athlete in local db
 function updateAthlete($data) {
@@ -135,6 +129,7 @@ function updateCompetitionResults($results) {
     		$db->close();
 }
 
+// Helper Function for updateCompetitionResults() to prevent an integrity failure
 function athleteExists($athleteId) {
     	$db = dbConnect();
     
@@ -150,6 +145,7 @@ function athleteExists($athleteId) {
     	return $exists;
 }
 
+// Searches/Filters Athletes from the db that meet the filters, used in searchAthletes.php
 function searchAthletes($name = '', $gender = '', $weapon = '', $country = '') {
     	$db = dbConnect();
     	$query = "SELECT id, name, gender, weapon, weapon2, nationality FROM athletes WHERE 1=1";
@@ -194,6 +190,7 @@ function searchAthletes($name = '', $gender = '', $weapon = '', $country = '') {
     	return $athletes;
 }
 
+// Calculates total points for all Athlete in the given Season
 function updateAthleteSeasonPoints($season) {
     	$db = dbConnect();
 
@@ -234,5 +231,64 @@ function updateAthleteSeasonPoints($season) {
     	$stmt->close();
     	$updateStmt->close();
     	$db->close();
+}
+
+// Gets Athlete Info, used in Athlete.php
+function getAthleteInfo($athleteId) {
+    	$db = dbConnect();
+    	$stmt = $db->prepare("SELECT firstName, lastName, gender, nationality FROM athletes WHERE id = ?");
+    	$stmt->bind_param("i", $athleteId);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+    	$athlete = $result->fetch_assoc();
+    	$stmt->close();
+    	$db->close();
+    	return $athlete;
+}
+
+function getAthleteWeapons($athleteId) {
+    	$db = dbConnect();
+    	$stmt = $db->prepare("SELECT weapon, weapon2 FROM athletes WHERE id = ?");
+    	$stmt->bind_param("i", $athleteId);
+    	$stmt->execute();
+    	$result = $stmt->get_result()->fetch_assoc();
+    	$weapons = array_filter([$result['weapon'], $result['weapon2']]);
+    	$stmt->close();
+    	$db->close();
+    	return $weapons;
+}
+
+function getTotalPoints($athleteId, $season, $weapon) {
+    	$db = dbConnect();
+    	$stmt = $db->prepare("SELECT points FROM athleteSeasonPoints WHERE athleteId = ? AND season = ? AND weapon = ?");
+    	$stmt->bind_param("iis", $athleteId, $season, $weapon);
+    	$stmt->execute();
+    	$stmt->bind_result($points);
+    	$stmt->fetch();
+    	$stmt->close();
+    	$db->close();
+    	return $points ?: 0;
+}
+
+function getCompetitionResults($athleteId, $season, $weapon) {
+    	$db = dbConnect();
+    	$query = "
+        	SELECT cr.points, cr.finished, c.name, c.category, c.location, c.country, c.startDate
+        	FROM competitionResults cr
+        	JOIN competitions c ON cr.competitionId = c.competitionId AND cr.season = c.season
+        	WHERE cr.athleteId = ? AND cr.season = ? AND c.weapon = ?
+        	ORDER BY c.startDate ASC
+    	";
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param("iis", $athleteId, $season, $weapon);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+    	$results = [];
+    	while ($row = $result->fetch_assoc()) {
+        	$results[] = $row;
+    	}
+    	$stmt->close();
+    	$db->close();
+    	return $results;
 }
 ?>
