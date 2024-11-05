@@ -98,7 +98,7 @@ $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
 				        	<td><?= htmlspecialchars($result['name']) ?></td>
 				        	<td><?= htmlspecialchars($competitionCategories[$result['category']] ?? $result['category']) ?></td>
 				        	<td><?= htmlspecialchars($result['location'] . ', ' . $result['country']) ?></td>
-				        	<td><?= htmlspecialchars($result['finished']) ?></td>
+				        	<td><?= $result['finished'] == 1 ? '🥇' : ($result['finished'] == 2 ? '🥈' : ($result['finished'] == 3 ? '🥉' : htmlspecialchars($result['finished'])))?></td>
 				        	<td><?= htmlspecialchars($result['points']) ?></td>
 				    	</tr>
 				<?php endforeach; ?>
