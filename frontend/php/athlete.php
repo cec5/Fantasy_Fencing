@@ -30,8 +30,8 @@ $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
     	<div class="container mt-5">
         	<!-- Athlete Name as Main Title with Flag Emoji -->
         	<h1>
-            		<?= htmlspecialchars($athlete['firstName'] . ' ' . $athlete['lastName']) ?> 
-            		<?= $flagEmoji ?>
+            		<?= htmlspecialchars($athlete['firstName'] . ' ' . $athlete['lastName'])?> 
+            		<?= $flagEmoji?>
         	</h1>
 
         	<!-- Basic Information Row -->
@@ -57,23 +57,23 @@ $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
         	</div>
         	<!-- Season Tabs -->
         	<ul class="nav nav-tabs mt-4" id="seasonTab" role="tablist">
-            		<?php foreach ($seasons as $seasonCode => $seasonName): ?>
+            		<?php foreach ($seasons as $seasonCode => $seasonName):?>
                 		<li class="nav-item" role="presentation">
-                    			<a class="nav-link <?= $seasonCode == $season ? 'active' : '' ?>" href="?id=<?= $athleteId ?>&season=<?= $seasonCode ?>&weapon=<?= $weapon ?>"><?= $seasonName ?></a>
+                    			<a class="nav-link <?= $seasonCode == $season ? 'active' : '' ?>" href="?id=<?= $athleteId ?>&season=<?= $seasonCode?>&weapon=<?= $weapon?>"><?= $seasonName?></a>
                 		</li>
-            		<?php endforeach; ?>
+            		<?php endforeach;?>
         	</ul>
         	<!-- Weapon Dropdown (if multiple weapons) -->
-        	<?php if (count($availableWeapons) > 1): ?>
+        	<?php if (count($availableWeapons) > 1):?>
             		<div class="mt-3">
                 		<label for="weapon" class="form-label">Select Weapon:</label>
                 		<select class="form-select" id="weapon" onchange="location = this.value;">
-                    			<?php foreach ($availableWeapons as $w): ?>
-                        			<option value="?id=<?= $athleteId ?>&season=<?= $season ?>&weapon=<?= $w ?>" <?= $w == $weapon ? 'selected' : '' ?>><?= ucfirst($w) ?></option>
-                    			<?php endforeach; ?>
+                    			<?php foreach ($availableWeapons as $w):?>
+                        			<option value="?id=<?= $athleteId?>&season=<?= $season?>&weapon=<?= $w?>" <?= $w == $weapon ? 'selected' : '' ?>><?= ucfirst($w)?></option>
+                    			<?php endforeach;?>
                 		</select>
             		</div>
-        	<?php endif; ?>
+        	<?php endif;?>
         	
         	<!-- Total Points -->
         	<h4 class="mt-4">Total Points Earned: <?= htmlspecialchars($totalPoints) ?></h4>
@@ -92,16 +92,16 @@ $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
                 		</tr>
             		</thead>
 		    	<tbody>
-				<?php foreach ($results as $result): ?>
+				<?php foreach ($results as $result):?>
 				    	<tr>
-				        	<td><?= htmlspecialchars($result['startDate']) ?></td>
-				        	<td><?= htmlspecialchars($result['name']) ?></td>
+				        	<td><?= htmlspecialchars($result['startDate'])?></td>
+				        	<td><a href="competition.php?season=<?= $season?>&id=<?= $result['competitionId'] ?>"><?= htmlspecialchars($result['name']) ?></a></td>
 				        	<td><?= htmlspecialchars($competitionCategories[$result['category']] ?? $result['category']) ?></td>
 				        	<td><?= htmlspecialchars($result['location'] . ', ' . $result['country']) ?></td>
 				        	<td><?= $result['finished'] == 1 ? '🥇' : ($result['finished'] == 2 ? '🥈' : ($result['finished'] == 3 ? '🥉' : htmlspecialchars($result['finished'])))?></td>
-				        	<td><?= htmlspecialchars($result['points']) ?></td>
+				        	<td><?= htmlspecialchars($result['points'])?></td>
 				    	</tr>
-				<?php endforeach; ?>
+				<?php endforeach;?>
 		    	</tbody>
         	</table>
     	</div>

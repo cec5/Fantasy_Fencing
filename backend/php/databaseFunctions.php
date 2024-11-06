@@ -270,10 +270,11 @@ function getTotalPoints($athleteId, $season, $weapon) {
     	return $points ?: 0;
 }
 
+// Get Competition Results for a given Athlete in a Particular Season
 function getCompetitionResults($athleteId, $season, $weapon) {
     	$db = dbConnect();
     	$query = "
-        	SELECT cr.points, cr.finished, c.name, c.category, c.location, c.country, c.startDate
+        	SELECT cr.points, cr.finished, c.season, c.competitionId, c.name, c.category, c.location, c.country, c.startDate
         	FROM competitionResults cr
         	JOIN competitions c ON cr.competitionId = c.competitionId AND cr.season = c.season
         	WHERE cr.athleteId = ? AND cr.season = ? AND c.weapon = ?
@@ -303,7 +304,6 @@ function getTopEarners($season, $weapon, $gender) {
         	WHERE asp.season = ? AND asp.weapon = ? AND a.gender = ?
         	ORDER BY asp.points DESC, a.name ASC
     	";
-    
     	$stmt = $db->prepare($query);
     	$stmt->bind_param("iss", $season, $weapon, $gender);
     	$stmt->execute();
@@ -316,5 +316,73 @@ function getTopEarners($season, $weapon, $gender) {
     	$stmt->close();
    	$db->close(); 
     	return $athletes;
+}
+
+// Get list of competitions filtered by season, weapon, and gender, ordered by date
+function getCompetitions($season, $weapon, $gender) {
+    	$db = dbConnect();
+    
+    	$query = "
+        	SELECT competitionId, season, name, category, location, country, startDate 
+        	FROM competitions 
+        	WHERE season = ? AND weapon = ? AND gender = ?
+        	ORDER BY startDate ASC
+    	";
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param("iss", $season, $weapon, $gender);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+    
+    	$competitions = [];
+    	while ($row = $result->fetch_assoc()) {
+        	$competitions[] = $row;
+    	}
+    	$stmt->close();
+    	$db->close();
+   	return $competitions;
+}
+
+// Get details of a specific competition
+function getCompetitionDetails($competitionId, $season) {
+    	$db = dbConnect();
+
+    	$query = "
+        	SELECT name, startDate, endDate, location, country, weapon, gender, category
+        	FROM competitions 
+        	WHERE competitionId = ? AND season = ?
+    	";
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param("ii", $competitionId, $season);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+    	$competition = $result->fetch_assoc();
+    	$stmt->close();
+    	$db->close();    
+    	return $competition;
+}
+
+// Get results for a specific Competition
+function getSpecificCompetitionResult($competitionId, $season) {
+    	$db = dbConnect();
+
+    	$query = "
+        	SELECT cr.athleteId, cr.finished as place, a.name, a.nationality, cr.points 
+        	FROM competitionResults cr 
+        	JOIN athletes a ON cr.athleteId = a.id 
+        	WHERE cr.competitionId = ? AND cr.season = ?
+        	ORDER BY cr.finished ASC
+    	";
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param("ii", $competitionId, $season);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+
+    	$results = [];
+    	while ($row = $result->fetch_assoc()) {
+        	$results[] = $row;
+    	}
+    	$stmt->close();
+    	$db->close();
+    	return $results;
 }
 ?>

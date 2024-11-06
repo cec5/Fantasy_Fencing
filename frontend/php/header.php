@@ -25,6 +25,10 @@
                             <li><a class="dropdown-item" href="leaders.php">Points Leaders</a></li>
                         </ul>
                     </li>
+                    <!-- Link to Competitions -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="competitions.php">Competitions</a>
+                    </li>
                 </ul>
             </div>
         </div>
