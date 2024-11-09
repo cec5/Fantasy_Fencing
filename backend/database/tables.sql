@@ -44,3 +44,15 @@ CREATE TABLE IF NOT EXISTS athleteSeasonPoints (
     	PRIMARY KEY (athleteId, season, weapon),
     	FOREIGN KEY (athleteId) REFERENCES athletes(id) ON DELETE CASCADE
 );
+
+/* Stores users account info */
+CREATE TABLE IF NOT EXISTS users (
+    	id INT AUTO_INCREMENT PRIMARY KEY,
+    	username VARCHAR(50) UNIQUE NOT NULL,
+    	email VARCHAR(100) NOT NULL,
+    	nationality CHAR(3) NOT NULL,
+    	password VARCHAR(255) NOT NULL,
+    	isAdmin BOOLEAN DEFAULT FALSE,
+    	CONSTRAINT chk_password CHECK (CHAR_LENGTH(password) >= 8),
+    	CONSTRAINT chk_email_format CHECK (email REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')
+);

@@ -1,5 +1,5 @@
 <?php
-require_once('../scraperFunctions.php');
+require_once('scraperFunctions.php');
 
 // Test script for the retrieval of an athlete from the FIE website
 print_r("Enter Athlete ID: ");

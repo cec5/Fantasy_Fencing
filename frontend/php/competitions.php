@@ -11,6 +11,8 @@ $gender = $_GET['gender'] ?? 'male';
 $competitions = getCompetitions($season, $weapon, $gender);
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
 <body>
     	<div class="container mt-5">
         	<h2>Competitions</h2>

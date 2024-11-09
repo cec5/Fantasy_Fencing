@@ -1,5 +1,5 @@
 <?php
-require_once('../scraperFunctions.php');
+require_once('scraperFunctions.php');
 require_once('../databaseFunctions.php');
 
 // Adds/Updates a singular Athlete to the Database based on data from the FIE website

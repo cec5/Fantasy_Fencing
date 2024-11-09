@@ -30,10 +30,35 @@
                         <a class="nav-link" href="competitions.php">Competitions</a>
                     </li>
                 </ul>
+                <!-- Profile dropdown on the right side -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <?php if (isset($_COOKIE['auth_token'])): ?>
+                                <!-- User is logged in, show My Profile and Logout options -->
+                                <li><a class="dropdown-item" href="#">My Profile</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+                            <?php else: ?>
+                                <!-- User is not logged in, show Register and Login options -->
+                                <li><a class="dropdown-item" href="register.php">Register</a></li>
+                                <li><a class="dropdown-item" href="login.php">Login</a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
-    <!-- Bootstrap JS -->
+
     <script src="../js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Logout function to clear the JWT cookie and redirect to the homepage
+        function logout() {
+        	// Set the cookie's expiration date to a past date
+        	document.cookie = "auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        	window.location.href = 'index.php'; // Redirect to the homepage
+    	}
+    </script>
 </body>
 </html>
