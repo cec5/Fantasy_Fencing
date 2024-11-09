@@ -37,7 +37,7 @@
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                             <?php if (isset($_COOKIE['auth_token'])): ?>
                                 <!-- User is logged in, show My Profile and Logout options -->
-                                <li><a class="dropdown-item" href="#">My Profile</a></li>
+                                <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
                                 <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
                             <?php else: ?>
                                 <!-- User is not logged in, show Register and Login options -->

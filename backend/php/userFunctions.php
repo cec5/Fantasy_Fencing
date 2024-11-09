@@ -91,10 +91,124 @@ function generateJWT($userId) {
 
 function validateToken($token) {
     	try {
-        	$decoded = JWT::decode($token, new Key('Fantasy_Fencing', 'HS256'));
+        	$decoded = JWT::decode($token, new \Firebase\JWT\Key('Fantasy_Fencing', 'HS256'));
         	return ["success" => true, "message" => "Token is valid.", "userId" => $decoded->sub];
     	} catch (Exception $e) {
         	return ["success" => false, "message" => "Invalid or expired token."];
+    	}
+}
+
+// Next few are used in profile.php
+
+function getUserInfo($userId) {
+    	$db = dbConnect();
+    	$stmt = $db->prepare("SELECT username, email, nationality FROM users WHERE id = ?");
+    	$stmt->bind_param("i", $userId);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+    	$userInfo = $result->fetch_assoc();
+    	$stmt->close();
+    	$db->close();
+    	return $userInfo;
+}
+
+function updateUsername($userId, $newUsername) {
+    	$db = dbConnect();
+
+    	// Check if the new username is already taken
+    	$stmt = $db->prepare("SELECT id FROM users WHERE username = ? AND id != ?");
+    	$stmt->bind_param("si", $newUsername, $userId);
+    	$stmt->execute();
+    	$stmt->store_result();
+    	if ($stmt->num_rows > 0) {
+        	$stmt->close();
+        	$db->close();
+        	return "Username is already taken.";
+    	}
+    	$stmt->close();
+
+    	// Update username
+    	$stmt = $db->prepare("UPDATE users SET username = ? WHERE id = ?");
+    	$stmt->bind_param("si", $newUsername, $userId);
+    	if ($stmt->execute()) {
+       		$stmt->close();
+        	$db->close();
+        	return true;
+    	} else {
+        	$stmt->close();
+        	$db->close();
+        	return "Error updating username.";
+    	}
+}
+
+function updateEmail($userId, $newEmail) {
+    	if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
+        	return "Invalid email format.";
+    	}
+
+    	$db = dbConnect();
+    	$stmt = $db->prepare("UPDATE users SET email = ? WHERE id = ?");
+    	$stmt->bind_param("si", $newEmail, $userId);
+    	if ($stmt->execute()) {
+        	$stmt->close();
+        	$db->close();
+        	return true;
+    	} else {
+        	$stmt->close();
+        	$db->close();
+        	return "Error updating email.";
+    	}
+}
+
+function updateNationality($userId, $newNationality) {
+    	global $validCountryCodes;
+    	if (!array_key_exists($newNationality, $validCountryCodes)) {
+        	return "Invalid nationality code.";
+    	}
+
+    	$db = dbConnect();
+    	$stmt = $db->prepare("UPDATE users SET nationality = ? WHERE id = ?");
+    	$stmt->bind_param("si", $newNationality, $userId);
+    	if ($stmt->execute()) {
+        	$stmt->close();
+        	$db->close();
+        	return true;
+    	} else {
+        	$stmt->close();
+        	$db->close();
+        	return "Error updating nationality.";
+    	}
+}
+
+function updateUserPassword($userId, $currentPassword, $newPassword) {
+    	$db = dbConnect();
+
+    	// Verify current password
+    	$stmt = $db->prepare("SELECT password FROM users WHERE id = ?");
+    	$stmt->bind_param("i", $userId);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+    	$user = $result->fetch_assoc();
+
+    	if (!password_verify($currentPassword, $user['password'])) {
+        	$stmt->close();
+        	$db->close();
+        	return "Current password is incorrect.";
+    	}
+    	$stmt->close();
+
+    	// Update to new password
+    	$newPasswordHash = password_hash($newPassword, PASSWORD_BCRYPT);
+    	$stmt = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+    	$stmt->bind_param("si", $newPasswordHash, $userId);
+    	if ($stmt->execute()) {
+        	$stmt->close();
+        	$db->close();
+        	return true;
+    	} else {
+        	$stmt->close();
+        	$db->close();
+        	return "Error updating password.";
     	}
 }
 ?>

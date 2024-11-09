@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     	$username = $_POST['username'];
     	$password = $_POST['password'];
 
-    	// Authenticate user (implement the actual authentication logic here)
     	$userId = loginUser($username, $password);
 
     	if ($userId) {

@@ -1,5 +1,4 @@
 <?php
-
 require_once('dbConnect.php');
 
 // Adds/Updates Athlete in local db
