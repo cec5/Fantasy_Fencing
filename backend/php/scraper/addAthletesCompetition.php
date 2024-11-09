@@ -1,5 +1,5 @@
 <?php
-require_once('../scraperFunctions.php');
+require_once('scraperFunctions.php');
 require_once('../databaseFunctions.php');
 
 // Script for the retrieval of Athletes from a particular competition and the addition of all of them into the db

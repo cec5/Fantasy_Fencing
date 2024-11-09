@@ -11,6 +11,8 @@ $competition = getCompetitionDetails($competitionId, $season);
 $results = getSpecificCompetitionResult($competitionId, $season);
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
 <body>
     	<div class="container mt-5">
         	<!-- Competition Name as Main Title -->

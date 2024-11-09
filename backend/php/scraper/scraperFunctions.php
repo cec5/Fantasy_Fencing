@@ -1,8 +1,8 @@
 <?php
 // This file contains functions relating to scraping data from the FIE and returning it in an array
 
-require_once 'vendor/autoload.php';
-require_once 'dataArrays.php';
+require_once '../../../backend/vendor/autoload.php';
+require_once '../../../backend/php/dataArrays.php';
 use Smalot\PdfParser\Parser;
 
 // Fetches fencer data from the FIE website based on ID
