@@ -2,7 +2,7 @@
 
 require_once('dbConnect.php');
 require_once('dataArrays.php');
-require_once('../../backend/vendor/autoload.php');
+require_once __DIR__ . '/../vendor/autoload.php';
 use \Firebase\JWT\JWT;
 
 function registerUser($username, $email, $nationality, $password) {
@@ -210,5 +210,18 @@ function updateUserPassword($userId, $currentPassword, $newPassword) {
         	$db->close();
         	return "Error updating password.";
     	}
+}
+
+// Checks Admin Status of User
+function isAdmin($userId) {
+    	$db = dbConnect();
+    	$stmt = $db->prepare("SELECT isAdmin FROM users WHERE id = ?");
+    	$stmt->bind_param("i", $userId);
+    	$stmt->execute();
+    	$stmt->bind_result($isAdmin);
+    	$stmt->fetch();
+    	$stmt->close();
+    	$db->close();
+    	return $isAdmin == 1;
 }
 ?>

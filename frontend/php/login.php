@@ -1,7 +1,7 @@
 <?php
 include 'header.php';
-include '../../backend/php/userFunctions.php';
-require_once '../../backend/vendor/autoload.php';
+require_once('../../backend/php/userFunctions.php');
+require_once('../../backend/vendor/autoload.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     	$username = $_POST['username'];
