@@ -1,6 +1,6 @@
 <?php 
-include 'header.php';
-include '../../backend/php/dataArrays.php';
+include('header.php');
+require_once('../../backend/php/dataArrays.php');
 ?>
 
 <!DOCTYPE html>
@@ -59,7 +59,7 @@ include '../../backend/php/dataArrays.php';
         	<h2>Register</h2>
         	<?php
         	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            		include '../../backend/php/userFunctions.php';
+            		require_once('../../backend/php/userFunctions.php');
             		$username = $_POST['username'];
             		$email = $_POST['email'];
             		$nationality = $_POST['countryCode'];
