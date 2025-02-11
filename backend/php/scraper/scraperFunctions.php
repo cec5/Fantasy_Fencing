@@ -118,9 +118,9 @@ function scrapeAthleteData($fencerId) {
 
 function scrapeCompetitionData($season, $competitionId) {
     	$url = "https://fie.org/competitions/$season/$competitionId";
-    
+
     	// Initialize a cURL session
-   	$ch = curl_init();
+    	$ch = curl_init();
     	curl_setopt($ch, CURLOPT_URL, $url);
     	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -141,11 +141,12 @@ function scrapeCompetitionData($season, $competitionId) {
             		return null;
         	}
 
-        	// Extract the gender by finding the first occurrence of "gender":"M" or "gender":"F"
-        	$gender = null;
-        	if (preg_match('/"gender":"(M|F)"/', $matches[1], $genderMatch)) {
-            		$gender = ($genderMatch[1] === 'M') ? 'male' : 'female';
-        	}
+        	// Extract gender from JSON
+        	$gender = isset($competitionData['gender']) && $competitionData['gender'] === 'M' ? 'male' : 'female';
+
+        	// Extract and validate age category
+        	$validCategories = ['S', 'J', 'C', 'V']; // Senior, Junior, Cadet, Veteran
+        	$ageCategory = isset($competitionData['category']) && in_array($competitionData['category'], $validCategories) ? $competitionData['category'] : 'S'; // Default to Senior if unrecognized
 
         	// Map the extracted data to the structure of the competitions table
         	$data = [
@@ -158,7 +159,8 @@ function scrapeCompetitionData($season, $competitionId) {
             		'country' => $competitionData['federation'],
             		'location' => $competitionData['location'],
             		'startDate' => $competitionData['startDate'],
-           		'endDate' => $competitionData['endDate']
+            		'endDate' => $competitionData['endDate'],
+            		'ageCategory' => $ageCategory
         	];
         	return $data;
     	} else {

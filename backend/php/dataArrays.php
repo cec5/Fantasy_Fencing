@@ -1,7 +1,7 @@
 <?php
 $validCountryCodes = [
     	"AFG" => "Afghanistan",
-    	"AIN" => "Neutral Athletes",
+    	"AIN" => "Neutral Athlete",
     	"ALB" => "Albania",
     	"ALG" => "Algeria",
     	"ANG" => "Angola",
@@ -331,8 +331,15 @@ $competitionCategories = [
     	"GP" => "Grand Prix",
     	"CHZ" => "Zonal Championships",
     	"CHM" => "World Championships",
-    	"JO" => "Olympic Games"
+    	"JO" => "Olympic Games",
+    	"OF" => "Olympic Qualifier" // Does not award points but will include anyway
 ];
+$ageCategories = [
+	"S" => "Senior",
+	"J" => "Junior"
+	//"C" => "Cadet"
+	//"V" => "Veteran"
+]; 
 $seasons = [
     	'2025' => '2024/2025',
     	'2026' => '2025/2026'

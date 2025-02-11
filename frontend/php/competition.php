@@ -32,14 +32,14 @@ $results = getSpecificCompetitionResult($competitionId, $season);
                     			<?= htmlspecialchars($competition['location'] . ', ' . $competition['country'])?>
                 		</div>
             		</div>
-        	</div>
-        	<div class="row mt-3 justify-content-center">
             		<div class="col-md-3">
                 		<div class="border p-3 text-center" style="font-size: 1.25rem;">
                     			<strong>Type</strong><br>
                     			<?= htmlspecialchars($competitionCategories[$competition['category']] ?? $competition['category']) ?>
                 		</div>
             		</div>
+        	</div>
+        	<div class="row mt-3 justify-content-center">
             		<div class="col-md-3">
                 		<div class="border p-3 text-center" style="font-size: 1.25rem;">
                     			<strong>Weapon</strong><br>
@@ -50,6 +50,12 @@ $results = getSpecificCompetitionResult($competitionId, $season);
                 		<div class="border p-3 text-center" style="font-size: 1.25rem;">
                     			<strong>Gender</strong><br>
                     			<?= ucfirst($competition['gender'])?>
+                		</div>
+            		</div>
+            		<div class="col-md-3">
+                		<div class="border p-3 text-center" style="font-size: 1.25rem;">
+                    			<strong>Level</strong><br>
+                    			<?= htmlspecialchars($ageCategories[$competition['ageCategory']] ?? $competition['ageCategory']) ?>
                 		</div>
             		</div>
        		</div>
