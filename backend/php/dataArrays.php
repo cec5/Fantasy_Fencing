@@ -160,7 +160,8 @@ $validCountryCodes = [
     	"UZB" => "Uzbekistan",
     	"VEN" => "Venezuela",
     	"VIE" => "Vietnam",
-    	"YEM" => "Yemen"
+    	"YEM" => "Yemen",
+	"FIE" => "FIE"
 ];
 $countryCodeMap = [
     	"AFG" => "AF",
@@ -323,7 +324,8 @@ $countryCodeMap = [
     	"UZB" => "UZ",
     	"VEN" => "VE",
     	"VIE" => "VN",
-    	"YEM" => "YE"
+    	"YEM" => "YE",
+	"FIE" => ""
 ];
 $competitionCategories = [
     	"SA" => "Satellite World Cup",
