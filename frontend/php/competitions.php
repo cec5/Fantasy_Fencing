@@ -6,9 +6,10 @@ include '../../backend/php/databaseFunctions.php';
 $season = $_GET['season'] ?? '2025';
 $weapon = $_GET['weapon'] ?? 'epee';
 $gender = $_GET['gender'] ?? 'male';
+$ageCategory = $_GET['ageCategory'] ?? 'S';
 
 // Fetch competitions based on the selected filters
-$competitions = getCompetitions($season, $weapon, $gender);
+$competitions = getCompetitions($season, $weapon, $gender, $ageCategory);
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +17,7 @@ $competitions = getCompetitions($season, $weapon, $gender);
 <body>
     	<div class="container mt-5">
         	<h2>Competitions</h2>
-        
+    
         	<!-- Filter Form -->
         	<form method="GET" class="row g-3 align-items-end">
             		<div class="col-md-3">
@@ -26,20 +27,28 @@ $competitions = getCompetitions($season, $weapon, $gender);
                         			<option value="<?= $seasonCode ?>" <?= $seasonCode == $season ? 'selected' : '' ?>><?= $seasonName ?></option>
                     			<?php endforeach;?>
                 		</select>
-            		</div>
-            		<div class="col-md-3">
+           		 </div>
+            		<div class="col-md-2">
                 		<label for="weapon" class="form-label">Weapon</label>
                 		<select class="form-select" id="weapon" name="weapon">
                     			<option value="epee" <?= $weapon == 'epee' ? 'selected' : '' ?>>Epee</option>
                     			<option value="foil" <?= $weapon == 'foil' ? 'selected' : '' ?>>Foil</option>
                     			<option value="sabre" <?= $weapon == 'sabre' ? 'selected' : '' ?>>Sabre</option>
-                		</select>
+               			 </select>
             		</div>
-            		<div class="col-md-3">
+            		<div class="col-md-2">
                 		<label for="gender" class="form-label">Gender</label>
                 		<select class="form-select" id="gender" name="gender">
                     			<option value="male" <?= $gender == 'male' ? 'selected' : '' ?>>Male</option>
                     			<option value="female" <?= $gender == 'female' ? 'selected' : '' ?>>Female</option>
+               			 </select>
+            		</div>
+            		<div class="col-md-2">
+                		<label for="ageCategory" class="form-label">Category</label>
+                		<select class="form-select" id="ageCategory" name="ageCategory">
+                    			<?php foreach ($ageCategories as $code => $name): ?>
+                        			<option value="<?= $code ?>" <?= $code == $ageCategory ? 'selected' : '' ?>><?= $name ?></option>
+                    			<?php endforeach; ?>
                 		</select>
             		</div>
             		<div class="col-md-3">
@@ -59,7 +68,7 @@ $competitions = getCompetitions($season, $weapon, $gender);
                 		</tr>
             		</thead>
             		<tbody>
-                		<?php foreach ($competitions as $competition):?>
+               			<?php foreach ($competitions as $competition):?>
                     			<tr>
                         			<td><?= htmlspecialchars($competition['startDate']) ?></td>
                         			<td><a href="competition.php?season=<?= $competition['season'] ?>&id=<?= $competition['competitionId']?>"><?= htmlspecialchars($competition['name'])?></a></td>

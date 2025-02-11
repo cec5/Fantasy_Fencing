@@ -7,8 +7,9 @@ include '../../backend/php/otherFunctions.php';
 $season = $_GET['season'] ?? '2025';
 $weapon = $_GET['weapon'] ?? 'epee';
 $gender = $_GET['gender'] ?? 'male';
+$ageCategory = $_GET['ageCategory'] ?? 'S';
 
-$topEarners = getTopEarners($season, $weapon, $gender);
+$topEarners = getTopEarners($season, $weapon, $gender, $ageCategory);
 ?>
 
 <body>
@@ -25,7 +26,7 @@ $topEarners = getTopEarners($season, $weapon, $gender);
                     			<?php endforeach; ?>
                			 </select>
             		</div>
-            		<div class="col-md-3">
+            		<div class="col-md-2">
 		        	<label for="weapon" class="form-label">Weapon</label>
 		        	<select class="form-select" id="weapon" name="weapon">
 		            		<option value="epee" <?= $weapon == 'epee' ? 'selected' : '' ?>>Epee</option>
@@ -33,11 +34,19 @@ $topEarners = getTopEarners($season, $weapon, $gender);
 		            		<option value="sabre" <?= $weapon == 'sabre' ? 'selected' : '' ?>>Sabre</option>
 		        	</select>
             		</div>
-            		<div class="col-md-3">
+            		<div class="col-md-2">
                 		<label for="gender" class="form-label">Gender</label>
                 		<select class="form-select" id="gender" name="gender">
                     			<option value="male" <?= $gender == 'male' ? 'selected' : '' ?>>Male</option>
                     			<option value="female" <?= $gender == 'female' ? 'selected' : '' ?>>Female</option>
+                		</select>
+            		</div>
+            		<div class="col-md-2">
+                		<label for="ageCategory" class="form-label">Category</label>
+                		<select class="form-select" id="ageCategory" name="ageCategory">
+                    			<?php foreach ($ageCategories as $code => $name): ?>
+                        			<option value="<?= $code ?>" <?= $code == $ageCategory ? 'selected' : '' ?>><?= $name ?></option>
+                    			<?php endforeach; ?>
                 		</select>
             		</div>
             		<div class="col-md-3">

@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS competitions (
     	competitionId INT NOT NULL,
     	name VARCHAR(100) NOT NULL,
     	category VARCHAR(5) NOT NULL,
+    	ageCategory ENUM('S', 'J', 'C', 'V') NOT NULL,
     	weapon ENUM('sabre', 'epee', 'foil') NOT NULL,
    	gender ENUM('male', 'female') NOT NULL,
     	country CHAR(3) NOT NULL,
@@ -40,8 +41,9 @@ CREATE TABLE IF NOT EXISTS athleteSeasonPoints (
     	athleteId INT NOT NULL,
     	season INT NOT NULL,
     	weapon ENUM('sabre', 'epee', 'foil') NOT NULL,
+    	ageCategory ENUM('S', 'J', 'C', 'V') NOT NULL,
     	points DOUBLE NOT NULL DEFAULT 0,
-    	PRIMARY KEY (athleteId, season, weapon),
+    	PRIMARY KEY (athleteId, season, weapon, ageCategory),
     	FOREIGN KEY (athleteId) REFERENCES athletes(id) ON DELETE CASCADE
 );
 
