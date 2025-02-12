@@ -74,7 +74,7 @@ function scrapeAthleteData($fencerId) {
     	// Retrieve PDF content for nationality and gender information
     	$pdfContent = @file_get_contents($basePdfUrl);
     	if ($pdfContent === false || empty($pdfContent)) {
-        	echo "Warning: No PDF content found for fencer ID $fencerId. Skipping.\n";
+        	echo "WARNING: No PDF found for Athlete ID:[$fencerId]\n";
         	return null;  // Skip this athlete if PDF content is empty
     	}
 
