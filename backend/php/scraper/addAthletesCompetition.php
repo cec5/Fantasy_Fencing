@@ -15,7 +15,7 @@ if (!$result) {
     	foreach ($result as $x) {
         	// Check if the athlete already exists in the database before scraping
         	if (athleteExists($x)) {
-            		echo "Skipping athlete ID $x because they already exist in the database.\n";
+            		echo "Skipped Athlete ID: [$x]; Already in Database\n";
             		continue;
         	}
 
@@ -25,13 +25,13 @@ if (!$result) {
         	if ($y) {
             		try {
                 		updateAthlete($y);
-                		echo "Successfully added/updated athlete ID $x.\n";
+                		//echo "Successfully added/updated athlete ID $x\n";
             		} catch (Exception $e) {
                 		echo "Failed to insert/update Athlete ID: [$x]: " . $e->getMessage() . "\n";
             		}
         	} else {
             		// Log the skipped athlete due to missing or incomplete data
-            		echo "Skipping athlete ID $x due to missing or incomplete data.\n";
+            		echo "Skipping Athlete ID: [$x] due to missing or incomplete data.\n";
         	}
     	}
 }
