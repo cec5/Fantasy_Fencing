@@ -85,9 +85,9 @@ function scrapeAthleteData($fencerId) {
 
     	// Extract valid nationality from PDF content
     	$nationality = '';
-    	preg_match_all('/\b([A-Z]{3}|_AIN)\b/', $pdfText, $matches);
+    	preg_match_all('/\b([A-Z]{3}|_AIN|AIN_)\b/', $pdfText, $matches);
     	foreach ($matches[1] as $match) {
-    		if ($match === "_AIN"){
+    		if ($match === "_AIN" || $match === "AIN_"){
     			$nationality = "AIN";
     			break;
     		} else if (array_key_exists($match, $validCountryCodes)) {
