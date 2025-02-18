@@ -164,7 +164,7 @@ $validCountryCodes = [
 ];
 $countryCodeMap = [
     	"AFG" => "AF",
-    	"AIN" => "",
+    	"AIN" => "_A",
     	"ALB" => "AL",
     	"ALG" => "DZ",
     	"ANG" => "AO",
