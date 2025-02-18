@@ -274,25 +274,25 @@ function getTotalPoints($athleteId, $season, $weapon, $ageCategory) {
 
 // Get Competition Results for a given Athlete in a Particular Season and Age Category
 function getCompetitionResults($athleteId, $season, $weapon, $ageCategory = 'S') {
-    $db = dbConnect();
-    $query = "
-        SELECT cr.points, cr.finished, c.season, c.competitionId, c.name, c.category, c.location, c.country, c.startDate, c.ageCategory
-        FROM competitionResults cr
-        JOIN competitions c ON cr.competitionId = c.competitionId AND cr.season = c.season
-        WHERE cr.athleteId = ? AND cr.season = ? AND c.weapon = ? AND c.ageCategory = ?
-        ORDER BY c.startDate ASC
-    ";
-    $stmt = $db->prepare($query);
-    $stmt->bind_param("iiss", $athleteId, $season, $weapon, $ageCategory);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $results = [];
-    while ($row = $result->fetch_assoc()) {
-        $results[] = $row;
-    }
-    $stmt->close();
-    $db->close();
-    return $results;
+    	$db = dbConnect();
+    	$query = "
+        	SELECT cr.points, cr.finished, c.season, c.competitionId, c.name, c.category, c.location, c.country, c.startDate, c.ageCategory
+        	FROM competitionResults cr
+        	JOIN competitions c ON cr.competitionId = c.competitionId AND cr.season = c.season
+        	WHERE cr.athleteId = ? AND cr.season = ? AND c.weapon = ? AND c.ageCategory = ?
+        	ORDER BY c.startDate ASC
+    	";
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param("iiss", $athleteId, $season, $weapon, $ageCategory);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+   	$results = [];
+    	while ($row = $result->fetch_assoc()) {
+        	$results[] = $row;
+    	}
+    	$stmt->close();
+    	$db->close();
+    	return $results;
 }
 
 // Get top point earners for a given season, weapon, and gender
