@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS competitions (
     	category VARCHAR(5) NOT NULL,
     	ageCategory ENUM('S', 'J', 'C', 'V') NOT NULL,
     	weapon ENUM('sabre', 'epee', 'foil') NOT NULL,
-   	gender ENUM('male', 'female') NOT NULL,
+   	    gender ENUM('male', 'female') NOT NULL,
     	country CHAR(3) NOT NULL,
     	location VARCHAR(50) NOT NULL,
     	startDate DATE NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS competitionResults (
     	points DOUBLE NOT NULL,
     	PRIMARY KEY (competitionId, season, athleteId),
     	FOREIGN KEY (competitionId, season) REFERENCES competitions(competitionId, season) ON DELETE CASCADE,
-   	FOREIGN KEY (athleteId) REFERENCES athletes(id) ON DELETE CASCADE
+       	FOREIGN KEY (athleteId) REFERENCES athletes(id) ON DELETE CASCADE
 );
 /* Stores Total Points Earned by Athlete per Season and Weapon*/
 CREATE TABLE IF NOT EXISTS athleteSeasonPoints (
@@ -46,8 +46,7 @@ CREATE TABLE IF NOT EXISTS athleteSeasonPoints (
     	PRIMARY KEY (athleteId, season, weapon, ageCategory),
     	FOREIGN KEY (athleteId) REFERENCES athletes(id) ON DELETE CASCADE
 );
-
-/* Stores users account info */
+/* Stores user account info */
 CREATE TABLE IF NOT EXISTS users (
     	id INT AUTO_INCREMENT PRIMARY KEY,
     	username VARCHAR(50) UNIQUE NOT NULL,
@@ -57,4 +56,26 @@ CREATE TABLE IF NOT EXISTS users (
     	isAdmin BOOLEAN DEFAULT FALSE,
     	CONSTRAINT chk_password CHECK (CHAR_LENGTH(password) >= 8),
     	CONSTRAINT chk_email_format CHECK (email REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')
+);
+/* Stores user athlete selections for an individual tournament */
+CREATE TABLE IF NOT EXISTS userSelections (
+        userId INT NOT NULL,
+        season INT NOT NULL,
+        competitionId INT NOT NULL,
+        athleteId INT NOT NULL,
+        PRIMARY KEY (userId, season, competitionId, athleteId),
+        FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (competitionId, season) REFERENCES competitions(competitionId, season) ON DELETE CASCADE,
+        FOREIGN KEY (athleteId) REFERENCES athletes(id) ON DELETE CASCADE
+);
+/* Stores user total fantasy points per season, weapon, gender, and age category */
+CREATE TABLE IF NOT EXISTS fantasyTotalPoints (
+        userId INT NOT NULL,
+        season INT NOT NULL,
+        weapon ENUM('sabre', 'epee', 'foil') NOT NULL,
+        gender ENUM('male', 'female') NOT NULL,
+        ageCategory ENUM('S', 'J', 'C', 'V') NOT NULL,
+        totalPoints DOUBLE NOT NULL DEFAULT 0,
+        PRIMARY KEY (userId, season, weapon, gender, ageCategory),
+        FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
