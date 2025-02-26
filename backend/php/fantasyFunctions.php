@@ -1,0 +1,195 @@
+<?php // This file contains functions relating to the fantasy application
+
+require_once('dbConnect.php');
+
+// Helper Function: Checks if the competition is locked (1 day prior to start date)
+function checkCompetitionLock($season, $competitionId){
+    	$db = dbConnect();
+    	$theNumber = 1;
+
+    	// Check if competition is locked (one day before start date)
+    	$stmt = $db->prepare("SELECT startDate FROM competitions WHERE competitionId = ? AND season = ?");
+    	$stmt->bind_param("ii", $competitionId, $season);
+    	$stmt->execute();
+    	$stmt->bind_result($startDate);
+    	$stmt->fetch();
+    	$stmt->close();
+
+    	if (strtotime($startDate) <= strtotime('-1 day')) {
+    		$db->close();
+        	return $theNumber == 0;
+    	}
+    	$db->close();
+    	return $theNumber == 1;
+}
+
+// Self-explantory, use in leaderboard.php
+function getFantasyLeaderboard($season, $weapon, $gender, $ageCategory) {
+    	$db = dbConnect();
+
+    	$query = "
+        	SELECT u.id, u.username, u.nationality, ftp.totalPoints 
+        	FROM fantasyTotalPoints ftp
+        	JOIN users u ON ftp.userId = u.id
+        	WHERE ftp.season = ? AND ftp.weapon = ? AND ftp.gender = ? AND ftp.ageCategory = ?
+        	ORDER BY ftp.totalPoints DESC, u.username ASC
+    		";
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param("isss", $season, $weapon, $gender, $ageCategory);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+
+    	$leaderboard = [];
+    	while ($row = $result->fetch_assoc()) {
+        	$leaderboard[] = $row;
+    	}
+    	$stmt->close();
+    	$db->close();
+    	return $leaderboard;
+}
+
+// Gets upcoming competitions for given filters, use for draft.php or similar
+function getUpcomingCompetitions($season, $weapon, $gender, $ageCategory) {
+    	$db = dbConnect();
+    
+    	$query = "
+		SELECT competitionId, name, startDate, location, country 
+		FROM competitions 
+		WHERE season = ? AND weapon = ? AND gender = ? AND ageCategory = ? 
+		AND startDate > CURDATE()
+		ORDER BY startDate ASC
+	    	";
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param("isss", $season, $weapon, $gender, $ageCategory);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+    
+    	$competitions = [];
+    	while ($row = $result->fetch_assoc()) {
+        	$competitions[] = $row;
+    	}
+    	$stmt->close();
+    	$db->close();
+    	return $competitions;
+}
+
+// Retrieves user current selections for a given competition
+function getUserSelections($userId, $season, $competitionId) {
+    	$db = dbConnect();
+    
+    	$query = "
+        	SELECT us.athleteId, a.name, a.nationality 
+        	FROM userSelections us
+        	JOIN athletes a ON us.athleteId = a.id
+        	WHERE us.userId = ? AND us.season = ? AND us.competitionId = ?
+    	";
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param("iii", $userId, $season, $competitionId);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+    
+    	$selections = [];
+    	while ($row = $result->fetch_assoc()) {
+        	$selections[] = $row;
+    	}
+    	$stmt->close();
+    	$db->close();
+    	return $selections;
+}
+
+// Function to calculate a user total fantasy points for a given season
+// TODO: Either include this in the automated script or write a separate script
+function calculateUserFantasyPoints($userId, $season) {
+    	$db = dbConnect();
+
+    	// Sum total points for each user based on athlete results
+    	$query = "
+        	INSERT INTO fantasyTotalPoints (userId, season, weapon, gender, ageCategory, totalPoints)
+        	SELECT us.userId, c.season, c.weapon, c.gender, c.ageCategory, COALESCE(SUM(cr.points), 0)
+		FROM userSelections us
+		JOIN competitionResults cr ON us.athleteId = cr.athleteId AND us.competitionId = cr.competitionId AND us.season = cr.season
+		JOIN competitions c ON cr.competitionId = c.competitionId AND cr.season = c.season
+		WHERE us.userId = ? AND us.season = ?
+		GROUP BY us.userId, c.weapon, c.gender, c.ageCategory
+		ON DUPLICATE KEY UPDATE totalPoints = VALUES(totalPoints)
+    		";
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param("ii", $userId, $season);
+    	$stmt->execute();
+    	$stmt->close();
+    	$db->close();
+}
+
+// Handles Drafting Logic (Add/Drop)
+function updateUserSelection($userId, $season, $competitionId, $athleteId, $action) {
+    	$db = dbConnect();
+    	
+    	if (!checkCompetitionLock($season, $competitionId){
+    		$db->close();
+    		return ["success" => false, "message" => "Athlete selections for this competition is locked"];
+    	}
+
+    	if ($action === 'add') {
+        	// Check if athlete is already selected
+        	$stmt = $db->prepare("
+            		SELECT COUNT(*) FROM userSelections 
+            		WHERE userId = ? AND season = ? AND competitionId = ? AND athleteId = ?
+        	");
+        	$stmt->bind_param("iiii", $userId, $season, $competitionId, $athleteId);
+        	$stmt->execute();
+        	$stmt->bind_result($count);
+        	$stmt->fetch();
+        	$stmt->close();
+
+        	if ($count > 0) {
+        		// TODO: Design frontend to prevent this happening to begin with, write modified version of searchAthletes
+        		$db->close();
+            		return ["success" => false, "message" => "Athlete is already selected"];
+        	}
+
+       		// Check if user already has 5 selections
+        	$stmt = $db->prepare("
+            		SELECT COUNT(*) FROM userSelections 
+            		WHERE userId = ? AND season = ? AND competitionId = ?
+        	");
+        	$stmt->bind_param("iii", $userId, $season, $competitionId);
+        	$stmt->execute();
+        	$stmt->bind_result($selectionCount);
+        	$stmt->fetch();
+        	$stmt->close();
+
+       	 	if ($selectionCount >= 5) {
+       	 		$db->close();
+       	 		// TODO: Design frontend where this normally shouldn't be triggered
+            		return ["success" => false, "message" => "You can only select up to 5 Athletes"];
+        	}
+
+        	// Add selection into database
+        	$stmt = $db->prepare("
+            		INSERT INTO userSelections (userId, season, competitionId, athleteId)
+            		VALUES (?, ?, ?, ?)
+        	");
+        	$stmt->bind_param("iiii", $userId, $season, $competitionId, $athleteId);
+        	$stmt->execute();
+        	$stmt->close();
+        	$db->close();
+        	return ["success" => true, "message" => "Athlete added!"];
+    	} elseif ($action === 'remove') {
+        	// Remove the athlete from selection
+        	$stmt = $db->prepare("
+            		DELETE FROM userSelections 
+            		WHERE userId = ? AND season = ? AND competitionId = ? AND athleteId = ?
+        	");
+        	$stmt->bind_param("iiii", $userId, $season, $competitionId, $athleteId);
+        	$stmt->execute();
+        	$stmt->close();
+        	$db->close();
+        	return ["success" => true, "message" => "Athlete dropped!"];
+    	}
+    	$db->close();
+    	// Normally should never happen
+    	return ["success" => false, "message" => "ERROR; Invalid Action "];
+}
+
+// TODO: Function needed for retrieval of athletes, either reuse searchAthletes from databaseFunctions.php, or modify it to avoid duplicate entries, place modified version here
+
