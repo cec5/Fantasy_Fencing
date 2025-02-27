@@ -8,7 +8,7 @@ use Smalot\PdfParser\Parser;
 // Fetches fencer data from the FIE website based on ID
 function scrapeAthleteData($fencerId) {
 
-	global $validCountryCodes;
+	global $validCountryCodes, $countryCodeMap;
 
     	$baseHtmlUrl = "https://fie.org/athletes/";
     	$basePdfUrl = $baseHtmlUrl . $fencerId . "/profile";
@@ -71,7 +71,27 @@ function scrapeAthleteData($fencerId) {
         	}
     	}
 
-    	// Retrieve PDF content for nationality and gender information
+	// Extract nationality from the athlete hero flag
+	$nationality = null;
+	$flagElement = $xpath->query("//span[contains(@class, 'AthleteHero-flag')]");
+	if ($flagElement->length > 0) {
+    		$flagClass = $flagElement->item(0)->getAttribute("class");
+    		if (preg_match('/Flag-icon--([a-z_]{2,3})/i', $flagClass, $matches)) {
+        		$twoLetterCode = strtoupper($matches[1]);
+        		if ($twoLetterCode === "A_") { // There's '_a' and 'a_' for some reason
+            			$nationality = "AIN";
+        		} else {
+            			$nationality = array_search($twoLetterCode, $countryCodeMap) ?: null; // Convert to three-letter code
+        		}
+    		}
+	}
+
+	// Default nationality to FIE; handles rare athletes who compete for 'FIE' (only 1 currently)
+    	if (!$nationality) {
+        	$nationality = "FIE";
+    	}
+    	
+	// Retrieve PDF content
     	$pdfContent = @file_get_contents($basePdfUrl);
     	if ($pdfContent === false || empty($pdfContent)) {
         	echo "WARNING: No PDF found for Athlete ID:[$fencerId]\n";
@@ -82,19 +102,6 @@ function scrapeAthleteData($fencerId) {
     	$parser = new Parser();
     	$pdf = $parser->parseContent($pdfContent);
     	$pdfText = $pdf->getText();
-
-    	// Extract valid nationality from PDF content
-    	$nationality = '';
-    	preg_match_all('/\b([A-Z]{3}|_AIN|AIN_)\b/', $pdfText, $matches);
-    	foreach ($matches[1] as $match) {
-    		if ($match === "_AIN" || $match === "AIN_"){
-    			$nationality = "AIN";
-    			break;
-    		} else if (array_key_exists($match, $validCountryCodes)) {
-            		$nationality = $match;
-            		break;
-        	}
-    	}
 
     	// Match a single 'M' or 'F' for gender
     	$gender = '';
