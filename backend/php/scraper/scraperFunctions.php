@@ -78,7 +78,7 @@ function scrapeAthleteData($fencerId) {
     		$flagClass = $flagElement->item(0)->getAttribute("class");
     		if (preg_match('/Flag-icon--([a-z_]{2,3})/i', $flagClass, $matches)) {
         		$twoLetterCode = strtoupper($matches[1]);
-        		if ($twoLetterCode === "A_") { // There's '_a' and 'a_' for some reason
+        		if ($twoLetterCode === "A_" or $twoLetterCode === "_A") { // There's '_a' and 'a_' for some reason
             			$nationality = "AIN";
         		} else {
             			$nationality = array_search($twoLetterCode, $countryCodeMap) ?: null; // Convert to three-letter code

@@ -225,7 +225,7 @@ function updateAthleteSeasonPoints($season) {
 
         	$updateStmt->bind_param("iissd", $athleteId, $season, $weapon, $ageCategory, $totalPoints);
         	if ($updateStmt->execute()) {
-            		echo "Updated total points for athlete ID: [$athleteId] in Season [$season], Category [$ageCategory], Weapon [$weapon] to [$totalPoints] points\n";
+            		//echo "Updated total points for athlete ID: [$athleteId] in Season [$season], Category [$ageCategory], Weapon [$weapon] to [$totalPoints] points\n";
         	} else {
             		echo "Error updating points for athlete ID [$athleteId]: " . $updateStmt->error . "\n";
         	}
@@ -233,6 +233,7 @@ function updateAthleteSeasonPoints($season) {
     	$stmt->close();
     	$updateStmt->close();
     	$db->close();
+    	echo "Finished Updating Points for Season [$season]";
 }
 
 // Gets Athlete Info, used in Athlete.php
