@@ -13,7 +13,7 @@ function logUnaddedAthletes($season, $competitionId, $skippedCount, $unaddedAthl
     	$content .= "Skipped Athletes (Already in DB): $skippedCount\n";
     	$content .= "Unadded Athletes:\n" . implode("\n", $unaddedAthletes) . "\n";
     
-    	file_put_contents($logFile, $content, FILE_APPEND);
+    	file_put_contents($logFile, $content);
 }
 
 function competitionResultsExist($season, $competitionId) {
@@ -47,10 +47,10 @@ function processCompletedCompetitions() {
         	$season = $row['season'];
 
         	// Skip if competition results already exist
-        	if (competitionResultsExist($season, $competitionId)) {
+        	/*if (competitionResultsExist($season, $competitionId)) {
             		echo "Results for Competition ID: [$competitionId] already exist. Skipping...\n";
             		continue;
-        	}
+        	}*/
 
         	echo "Processing Competition: [$competitionId] for Season: [$season]\n";
 
