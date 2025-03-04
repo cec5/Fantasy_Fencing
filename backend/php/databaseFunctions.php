@@ -233,7 +233,7 @@ function updateAthleteSeasonPoints($season) {
     	$stmt->close();
     	$updateStmt->close();
     	$db->close();
-    	echo "Finished Updating Points for Season [$season]";
+    	echo "Finished Updating Points for Season [$season]\n";
 }
 
 // Gets Athlete Info, used in Athlete.php
