@@ -48,31 +48,6 @@ function getFantasyLeaderboard($season, $weapon, $gender, $ageCategory) {
     	return $leaderboard;
 }
 
-// Gets upcoming competitions for given filters, use for draft.php or similar
-function getUpcomingCompetitions($season, $weapon, $gender, $ageCategory) {
-    	$db = dbConnect();
-    
-    	$query = "
-		SELECT competitionId, name, startDate, location, country 
-		FROM competitions 
-		WHERE season = ? AND weapon = ? AND gender = ? AND ageCategory = ? 
-		AND startDate > CURDATE()
-		ORDER BY startDate ASC
-	    	";
-    	$stmt = $db->prepare($query);
-    	$stmt->bind_param("isss", $season, $weapon, $gender, $ageCategory);
-    	$stmt->execute();
-    	$result = $stmt->get_result();
-    
-    	$competitions = [];
-    	while ($row = $result->fetch_assoc()) {
-        	$competitions[] = $row;
-    	}
-    	$stmt->close();
-    	$db->close();
-    	return $competitions;
-}
-
 // Retrieves user current selections for a given competition
 function getUserSelections($userId, $season, $competitionId) {
     	$db = dbConnect();
@@ -236,4 +211,3 @@ function getFilteredUpcomingCompetitions($season, $weapon = '', $gender = '', $a
 }
 
 // TODO: Function needed for retrieval of athletes, either reuse searchAthletes from databaseFunctions.php, or modify it to avoid duplicate entries, place modified version here
-
