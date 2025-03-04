@@ -1,14 +1,14 @@
-<?php
 include 'header.php';
 include '../../backend/php/dataArrays.php';
 include '../../backend/php/databaseFunctions.php';
 include '../../backend/php/otherFunctions.php';
 
 $season = $_GET['season'] ?? '2025';
-$userId = $_SESSION['userId'] ?? 1; // Placeholder, replace with actual session user ID retrieval
+$competitionId = $_GET['competitionId'] ?? ''; // Get competition ID from URL
+$userId = $_SESSION['userId'] ?? 1; 
 
-$allPlayers = getFantasyLeaderboard($season, '', '', ''); // Fetch all players
-$userTeam = getUserSelections($userId, $season, ''); // Fetch current user selections
+$allPlayers = getFantasyLeaderboard($season, '', '', '', $competitionId); // Fetch players for the specific competition
+$userTeam = getUserSelections($userId, $season, $competitionId); // Fetch current user selections for the competition
 ?>
 
 <body>
@@ -63,7 +63,7 @@ $userTeam = getUserSelections($userId, $season, ''); // Fetch current user selec
                 fetch('updateFantasyTeam.php', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                    body: `userId=<?= $userId ?>&season=<?= $season ?>&athleteId=${playerId}&action=add`
+                    body: `userId=<?= $userId ?>&season=<?= $season ?>&competitionId=<?= $competitionId ?>&athleteId=${playerId}&action=add`
                 })
                 .then(response => response.json())
                 .then(data => {
