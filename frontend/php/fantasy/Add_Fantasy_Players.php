@@ -1,8 +1,9 @@
 <?php
-include 'header.php';
-include '../../backend/php/dataArrays.php';
-include '../../backend/php/databaseFunctions.php';
-include '../../backend/php/otherFunctions.php';
+include 'fantasyHeader.php';
+include '../../../backend/php/dataArrays.php';
+include '../../../backend/php/databaseFunctions.php';
+include '../../../backend/php/otherFunctions.php';
+require_once('../../../backend/php/fantasyFunctions.php');
 
 $season = $_GET['season'] ?? '2025';
 $userId = $_SESSION['userId'] ?? 1; // Placeholder, replace with actual session user ID retrieval
