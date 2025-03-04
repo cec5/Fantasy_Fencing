@@ -1,16 +1,9 @@
-<<<<<<< HEAD
 <?php
-include 'fantasyHeader.php';
-include '../../../backend/php/dataArrays.php';
-include '../../../backend/php/databaseFunctions.php';
-include '../../../backend/php/otherFunctions.php';
+require_once('fantasyHeader.php');
+require_once('../../../backend/php/dataArrays.php');
+require_once('../../../backend/php/databaseFunctions.php');
+require_once('../../../backend/php/otherFunctions.php');
 require_once('../../../backend/php/fantasyFunctions.php');
-=======
-include 'header.php';
-include '../../backend/php/dataArrays.php';
-include '../../backend/php/databaseFunctions.php';
-include '../../backend/php/otherFunctions.php';
->>>>>>> e675692cff98328bbb8d50db04c673fea05448d8
 
 $season = $_GET['season'] ?? '2025';
 $competitionId = $_GET['competitionId'] ?? ''; // Get competition ID from URL
