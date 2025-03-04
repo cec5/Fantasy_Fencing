@@ -124,7 +124,7 @@ function calculateUserFantasyPoints($userId, $season) {
 function updateUserSelection($userId, $season, $competitionId, $athleteId, $action) {
     	$db = dbConnect();
     	
-    	if (!checkCompetitionLock($season, $competitionId){
+    	if (!checkCompetitionLock($season, $competitionId)){
     		$db->close();
     		return ["success" => false, "message" => "Athlete selections for this competition is locked"];
     	}
@@ -189,6 +189,50 @@ function updateUserSelection($userId, $season, $competitionId, $athleteId, $acti
     	$db->close();
     	// Normally should never happen
     	return ["success" => false, "message" => "ERROR; Invalid Action "];
+}
+
+// Modified version of getCompetitions(); used in fantasy.php to retrieve and filter for upcoming competitions
+function getFilteredUpcomingCompetitions($season, $weapon = '', $gender = '', $ageCategory = '') {
+    	$db = dbConnect();
+    
+    	$query = "
+        	SELECT competitionId, name, startDate, location, country, category, weapon, gender, ageCategory 
+        	FROM competitions 
+        	WHERE season = ? AND startDate > CURDATE()
+    	";
+    	$params = [$season];
+    	$types = "i";
+
+    	if ($weapon) {
+        	$query .= " AND weapon = ?";
+        	$params[] = $weapon;
+        	$types .= "s";
+    	}
+    	if ($gender) {
+        $query .= " AND gender = ?";
+        $params[] = $gender;
+        $types .= "s";
+    	}
+    	if ($ageCategory) {
+        	$query .= " AND ageCategory = ?";
+        	$params[] = $ageCategory;
+        	$types .= "s";
+    	}
+
+    	$query .= " ORDER BY startDate ASC";
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param($types, ...$params);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+    
+   	$competitions = [];
+    	while ($row = $result->fetch_assoc()) {
+        	$competitions[] = $row;
+    	}
+    
+    	$stmt->close();
+    	$db->close();
+    	return $competitions;
 }
 
 // TODO: Function needed for retrieval of athletes, either reuse searchAthletes from databaseFunctions.php, or modify it to avoid duplicate entries, place modified version here
