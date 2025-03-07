@@ -23,7 +23,7 @@ if (isset($_COOKIE['auth_token'])) {
     	<!-- Navbar -->
     	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         	<div class="container">
-            		<a class="navbar-brand" href="index.php">Fantasy Fencing</a>
+            		<a class="navbar-brand" href="../index.php">Fantasy Fencing</a>
             		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 		<span class="navbar-toggler-icon"></span>
             		</button>
@@ -87,7 +87,7 @@ if (isset($_COOKIE['auth_token'])) {
         	// Logout function to clear the JWT cookie and redirect to the homepage
         	function logout() {
             		document.cookie = "auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            		window.location.href = 'index.php';
+            		window.location.href = '../index.php';
         	}
     	</script>
 </body>

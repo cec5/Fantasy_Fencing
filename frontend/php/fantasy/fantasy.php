@@ -17,7 +17,7 @@ $competitions = getFilteredUpcomingCompetitions($season, $weapon, $gender, $ageC
 <html lang="en">
 <body>
     	<div class="container mt-5">
-        	<h2>Upcoming Competitions</h2>
+        	<h2>Draft Athletes for Upcoming Competitions</h2>
         
         	<!-- Filters Form -->
         	<form method="GET" class="row g-3 align-items-end">
@@ -54,7 +54,7 @@ $competitions = getFilteredUpcomingCompetitions($season, $weapon, $gender, $ageC
 
         	<!-- Competitions Table -->
         	<?php if (!empty($competitions)): ?>
-            		<table class="table table-striped">
+            		<table class="table table-striped table-bordered">
                 		<thead>
                     			<tr>
 						<th>Date</th>

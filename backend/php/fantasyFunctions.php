@@ -3,24 +3,16 @@
 require_once('dbConnect.php');
 
 // Helper Function: Checks if the competition is locked (1 day prior to start date)
-function checkCompetitionLock($season, $competitionId){
+function isCompetitionLocked($season, $competitionId) {
     	$db = dbConnect();
-    	$theNumber = 1;
-
-    	// Check if competition is locked (one day before start date)
-    	$stmt = $db->prepare("SELECT startDate FROM competitions WHERE competitionId = ? AND season = ?");
+   	$stmt = $db->prepare("SELECT startDate FROM competitions WHERE competitionId = ? AND season = ?");
     	$stmt->bind_param("ii", $competitionId, $season);
     	$stmt->execute();
     	$stmt->bind_result($startDate);
     	$stmt->fetch();
     	$stmt->close();
-
-    	if (strtotime($startDate) <= strtotime('-1 day')) {
-    		$db->close();
-        	return $theNumber == 0;
-    	}
     	$db->close();
-    	return $theNumber == 1;
+    	return strtotime($startDate) <= strtotime('+1 day'); // Locked 1 day before the start date
 }
 
 // Self-explantory, use in leaderboard.php
@@ -99,7 +91,7 @@ function calculateUserFantasyPoints($userId, $season) {
 function updateUserSelection($userId, $season, $competitionId, $athleteId, $action) {
     	$db = dbConnect();
     	
-    	if (!checkCompetitionLock($season, $competitionId)){
+    	if (isCompetitionLocked($season, $competitionId)){
     		$db->close();
     		return ["success" => false, "message" => "Athlete selections for this competition is locked"];
     	}

@@ -63,7 +63,7 @@ $results = getSpecificCompetitionResult($competitionId, $season);
         	<!-- Competition Results Table -->
         	<h4 class="mt-4">Competition Results</h4>
         	<?php if (!empty($results)):?>
-            		<table class="table table-striped">
+            		<table class="table table-striped table-bordered">
                 		<thead>
                     			<tr>
                         			<th>Place</th>

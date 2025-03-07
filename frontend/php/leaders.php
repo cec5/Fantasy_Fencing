@@ -14,7 +14,7 @@ $topEarners = getTopEarners($season, $weapon, $gender, $ageCategory);
 
 <body>
     	<div class="container mt-5">
-        	<h2>FIE Points Leaders</h2>
+        	<h2>International Points Leaders</h2>
         
         	<!-- Filter Form -->
         	<form method="GET" class="row g-3 align-items-end">
@@ -56,7 +56,7 @@ $topEarners = getTopEarners($season, $weapon, $gender, $ageCategory);
 
         	<!-- Results Table -->
         	<h3 class="mt-5">Results</h3>
-        	<table class="table table-striped">
+        	<table class="table table-striped table-bordered">
             		<thead>
                 		<tr>
                     			<th>Rank</th>

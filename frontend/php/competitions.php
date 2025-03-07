@@ -58,7 +58,7 @@ $competitions = getCompetitions($season, $weapon, $gender, $ageCategory);
 
         	<!-- Competitions Table -->
         	<h3 class="mt-5">Results</h3>
-        	<table class="table table-striped">
+        	<table class="table table-striped table-bordered">
             		<thead>
                 		<tr>
                     			<th>Date</th>
