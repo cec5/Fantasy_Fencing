@@ -43,24 +43,24 @@ if (!empty($_GET['name']) || !empty($_GET['country'])) {
         	<!-- Competition Info -->
         	<div class="row mt-3 justify-content-center">
             		<div class="col-md-3">
-                		<div class="border p-2 text-center"><strong>Date</strong><br><?= htmlspecialchars($competition['startDate']) ?></div>
+                		<div class="border p-2 text-center" style="font-size: 1.25rem;"><strong>Date</strong><br><?= htmlspecialchars($competition['startDate']) ?></div>
             		</div>
             		<div class="col-md-3">
-                		<div class="border p-2 text-center"><strong>Location</strong><br><?= htmlspecialchars($competition['location'] . ', ' . $competition['country']) ?></div>
+                		<div class="border p-2 text-center" style="font-size: 1.25rem;"><strong>Location</strong><br><?= htmlspecialchars($competition['location'] . ', ' . $competition['country']) ?></div>
             		</div>
             		<div class="col-md-3">
-                		<div class="border p-2 text-center"><strong>Type</strong><br><?= htmlspecialchars($competitionCategories[$competition['category']] ?? $competition['category']) ?></div>
+                		<div class="border p-2 text-center" style="font-size: 1.25rem;"><strong>Type</strong><br><?= htmlspecialchars($competitionCategories[$competition['category']] ?? $competition['category']) ?></div>
             		</div>
         	</div>
         	<div class="row mt-3 justify-content-center">
             		<div class="col-md-3">
-                		<div class="border p-2 text-center"><strong>Weapon</strong><br><?= ucfirst($competition['weapon']) ?></div>
+                		<div class="border p-2 text-center" style="font-size: 1.25rem;"><strong>Weapon</strong><br><?= ucfirst($competition['weapon']) ?></div>
             		</div>
             		<div class="col-md-3">
-                		<div class="border p-2 text-center"><strong>Gender</strong><br><?= ucfirst($competition['gender']) ?></div>
+                		<div class="border p-2 text-center" style="font-size: 1.25rem;"><strong>Gender</strong><br><?= ucfirst($competition['gender']) ?></div>
             		</div>
             		<div class="col-md-3">
-                		<div class="border p-2 text-center"><strong>Level</strong><br><?= htmlspecialchars($ageCategories[$competition['ageCategory']] ?? $competition['ageCategory']) ?></div>
+                		<div class="border p-2 text-center" style="font-size: 1.25rem;"><strong>Level</strong><br><?= htmlspecialchars($ageCategories[$competition['ageCategory']] ?? $competition['ageCategory']) ?></div>
             		</div>
         	</div>
 
