@@ -66,25 +66,29 @@ function getUserSelections($userId, $season, $competitionId) {
 
 // Function to calculate a user total fantasy points for a given season
 // TODO: Either include this in the automated script or write a separate script
-function calculateUserFantasyPoints($userId, $season) {
-    	$db = dbConnect();
+function calculateFantasyPointsForSeason($season) {
+    $db = dbConnect();
 
-    	// Sum total points for each user based on athlete results
-    	$query = "
-        	INSERT INTO fantasyTotalPoints (userId, season, weapon, gender, ageCategory, totalPoints)
-        	SELECT us.userId, c.season, c.weapon, c.gender, c.ageCategory, COALESCE(SUM(cr.points), 0)
-		FROM userSelections us
-		JOIN competitionResults cr ON us.athleteId = cr.athleteId AND us.competitionId = cr.competitionId AND us.season = cr.season
-		JOIN competitions c ON cr.competitionId = c.competitionId AND cr.season = c.season
-		WHERE us.userId = ? AND us.season = ?
-		GROUP BY us.userId, c.weapon, c.gender, c.ageCategory
-		ON DUPLICATE KEY UPDATE totalPoints = VALUES(totalPoints)
-    		";
-    	$stmt = $db->prepare($query);
-    	$stmt->bind_param("ii", $userId, $season);
-    	$stmt->execute();
-    	$stmt->close();
-    	$db->close();
+    // Sum total points for all users based on athlete results
+    $query = "
+        INSERT INTO fantasyTotalPoints (userId, season, weapon, gender, ageCategory, totalPoints)
+        SELECT us.userId, c.season, c.weapon, c.gender, c.ageCategory, COALESCE(SUM(cr.points), 0)
+        FROM userSelections us
+        JOIN competitionResults cr ON us.athleteId = cr.athleteId 
+            AND us.competitionId = cr.competitionId 
+            AND us.season = cr.season
+        JOIN competitions c ON cr.competitionId = c.competitionId 
+            AND cr.season = c.season
+        WHERE us.season = ?
+        GROUP BY us.userId, c.season, c.weapon, c.gender, c.ageCategory
+        ON DUPLICATE KEY UPDATE totalPoints = VALUES(totalPoints)
+    ";
+
+    $stmt = $db->prepare($query);
+    $stmt->bind_param("i", $season);
+    $stmt->execute();
+    $stmt->close();
+    $db->close();
 }
 
 // Handles Drafting Logic (Add/Drop)

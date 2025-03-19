@@ -37,7 +37,7 @@ include '../../backend/php/dataArrays.php';
                         			<?php endforeach; ?>
                     			</datalist>
                 		</div>
-                		<div class="col-md-2">
+                		<div class="col-md-3">
                     			<button type="submit" class="btn btn-primary w-100">Search</button>
                 		</div>
             		</div>

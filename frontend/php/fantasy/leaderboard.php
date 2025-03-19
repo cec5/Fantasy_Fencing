@@ -15,7 +15,7 @@ $fantasyLeaderboard = getFantasyLeaderboard($season, $weapon, $gender, $ageCateg
 
 <body>
     <div class="container mt-5">
-        <h2>Fantasy Points Leaders</h2>
+        <h2>Fantasy Leaderboard</h2>
         
         <!-- Filter Form -->
         <form method="GET" class="row g-3 align-items-end">
@@ -56,20 +56,31 @@ $fantasyLeaderboard = getFantasyLeaderboard($season, $weapon, $gender, $ageCateg
         </form>
 
         <!-- Results Table -->
-        <h3 class="mt-5">Results</h3>
-        <table class="table table-striped">
+        <h3 class="mt-5">Ranking</h3>
+        <table class="table table-striped table-bordered">
             <thead>
                 <tr>
+                    <th>Rank</th>
                     <th>Player</th>
-                    <th>Competition</th>
+                    <th>Nationality</th>
                     <th>Total Fantasy Points</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($fantasyLeaderboard as $player): ?>
+                <?php
+                $rank = 0;
+                $previousPoints = null;
+                foreach ($fantasyLeaderboard as $index => $player):
+                    // Assign rank only if points are different from previous
+                    if ($previousPoints === null || $player['totalPoints'] < $previousPoints) {
+                        $rank = $index + 1;
+                    }
+                    $previousPoints = $player['totalPoints'];
+                ?>
                     <tr>
-                        <td><a href="player.php?id=<?= $player['id'] ?>"><?= htmlspecialchars($player['username']) ?></a></td>
-                        <td><?= htmlspecialchars($player['nationality']) ?></td>
+                        <td><?= $rank ?></td>
+                        <td><?= htmlspecialchars($player['username']) ?></td>
+                        <td><?= htmlspecialchars($validCountryCodes[$player['nationality']] ?? $player['nationality']) ?></td>
                         <td><?= htmlspecialchars($player['totalPoints']) ?></td>
                     </tr>
                 <?php endforeach; ?>

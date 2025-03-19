@@ -1,5 +1,0 @@
-Competition Season: [2025]
-Competition ID: [774]
-Skipped Athletes (Already in DB): 73
-Unadded Athletes:
-
