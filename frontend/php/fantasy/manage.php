@@ -79,31 +79,30 @@ $ageCategory = $_GET['ageCategory'] ?? '';
 				$sel = getUserSelections($userId, $season, $comp['competitionId']);
 			?>
 			<div class="mb-5 border p-3 rounded">
-				<table class="table table-bordered">
-				    	<tr>
-				            	<th>Name</th>
-				            	<td colspan="5">
-				                	<a href="draft.php?season=<?= $season ?>&id=<?= $comp['competitionId'] ?>">
-				                    		<?= htmlspecialchars($comp['name']) ?>
-				                	</a>
-				            	</td>
-				        </tr>
-				        <tr>
-				            	<th>Date</th>
-				            	<td><?= htmlspecialchars($comp['startDate']) ?></td>
-				            	<th>Location</th>
-				            	<td><?= htmlspecialchars($comp['location'] . ', ' . $comp['country']) ?></td>
-				            	<th>Type</th>
-				            	<td><?= htmlspecialchars($competitionCategories[$comp['category']] ?? $comp['category']) ?></td>
-				        </tr>
-				        <tr>
-				            	<th>Weapon</th>
-				            	<td><?= ucfirst($comp['weapon']) ?></td>
-				            	<th>Gender</th>
-				            	<td><?= ucfirst($comp['gender']) ?></td>
-				            	<th>Level</th>
-				            	<td><?= $ageCategories[$comp['ageCategory']] ?? $comp['ageCategory'] ?></td>
-				        </tr>
+				<table class="table table-striped table-bordered text-center">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Name</th>
+							<th>Location</th>
+							<th>Type</th>
+							<th>Weapon</th>
+							<th>Gender</th>
+							<th>Category</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+				            		<td><?= htmlspecialchars($comp['startDate']) ?></td>
+				            		<td><a href="draft.php?season=<?= $season ?>&id=<?= $comp['competitionId']?>"><?= htmlspecialchars($comp['name'])?></a></td>
+				            		<td><?= htmlspecialchars($comp['location'] . ', ' . $comp['country']) ?></td>
+				            	
+				            		<td><?= htmlspecialchars($competitionCategories[$comp['category']] ?? $comp['category']) ?></td>
+				            		<td><?= ucfirst($comp['weapon']) ?></td>
+				            		<td><?= ucfirst($comp['gender']) ?></td>
+				            		<td><?= $ageCategories[$comp['ageCategory']] ?? $comp['ageCategory'] ?></td>
+				        	</tr>
+				        </tbody>
 				</table>
 				<table class="table table-striped table-sm table-bordered">
 				        <thead>
@@ -139,32 +138,31 @@ $ageCategory = $_GET['ageCategory'] ?? '';
 		            	}
 		    	?>
 		        <div class="mb-5 border p-3 rounded">
-		            	<table class="table table-bordered">
-		            		<tr>
-		                    		<th>Name</th>
-		                    		<td colspan="5">
-		                        		<a href="../competition.php?season=<?= $season ?>&id=<?= $comp['competitionId'] ?>">
-		                            			<?= htmlspecialchars($comp['name']) ?>
-		                        		</a>
-		                    		</td>
-		                	</tr>
-		                	<tr>
-		                    		<th>Date</th>
-						<td><?= htmlspecialchars($comp['startDate']) ?></td>
-						<th>Location</th>
-						<td><?= htmlspecialchars($comp['location'] . ', ' . $comp['country']) ?></td>
-						<th>Type</th>
-						<td><?= htmlspecialchars($competitionCategories[$comp['category']] ?? $comp['category']) ?></td>
-		                	</tr>
-		                	<tr>
-		                    		<th>Weapon</th>
-		                    		<td><?= ucfirst($comp['weapon']) ?></td>
-		                    		<th>Gender</th>
-		                    		<td><?= ucfirst($comp['gender']) ?></td>
-		                    		<th>Level</th>
-		                    		<td><?= $ageCategories[$comp['ageCategory']] ?? $comp['ageCategory'] ?></td>
-		                	</tr>
-		            	</table>
+		            	<table class="table table-striped table-bordered text-center">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Name</th>
+							<th>Location</th>
+							<th>Type</th>
+							<th>Weapon</th>
+							<th>Gender</th>
+							<th>Category</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+				            		<td><?= htmlspecialchars($comp['startDate']) ?></td>
+				            		<td><a href="../competition.php?season=<?= $season ?>&id=<?= $comp['competitionId']?>"><?= htmlspecialchars($comp['name'])?></a></td>
+				            		<td><?= htmlspecialchars($comp['location'] . ', ' . $comp['country']) ?></td>
+				            	
+				            		<td><?= htmlspecialchars($competitionCategories[$comp['category']] ?? $comp['category']) ?></td>
+				            		<td><?= ucfirst($comp['weapon']) ?></td>
+				            		<td><?= ucfirst($comp['gender']) ?></td>
+				            		<td><?= $ageCategories[$comp['ageCategory']] ?? $comp['ageCategory'] ?></td>
+				        	</tr>
+				        </tbody>
+				</table>
 		            	<table class="table table-striped table-sm table-bordered">
 		                	<thead>
 		                    		<tr><th>#</th><th>Name</th><th>Nationality</th><th>Points</th></tr>
