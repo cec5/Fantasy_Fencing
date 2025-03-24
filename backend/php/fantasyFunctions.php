@@ -206,4 +206,37 @@ function getFilteredUpcomingCompetitions($season, $weapon = '', $gender = '', $a
     	return $competitions;
 }
 
-// TODO: Function needed for retrieval of athletes, either reuse searchAthletes from databaseFunctions.php, or modify it to avoid duplicate entries, place modified version here
+// Get all competitions user has made selections for
+function getUserCompetitions($userId, $season, $isPast, $weapon = '', $gender = '', $ageCategory = '') {
+    	$db = dbConnect();
+
+    	$query = "
+        	SELECT DISTINCT c.*
+        	FROM competitions c
+        	JOIN userSelections us ON c.competitionId = us.competitionId AND c.season = us.season
+        	WHERE us.userId = ? AND c.season = ?
+    	";
+    	$params = [$userId, $season];
+    	$types = "ii";
+
+    	if ($weapon) { $query .= " AND c.weapon = ?"; $params[] = $weapon; $types .= "s"; }
+    	if ($gender) { $query .= " AND c.gender = ?"; $params[] = $gender; $types .= "s"; }
+    	if ($ageCategory) { $query .= " AND c.ageCategory = ?"; $params[] = $ageCategory; $types .= "s"; }
+
+    	$query .= $isPast ? " AND c.startDate <= CURDATE()" : " AND c.startDate > CURDATE()";
+    	$query .= " ORDER BY c.startDate ASC";
+
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param($types, ...$params);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+
+    	$competitions = [];
+    	while ($row = $result->fetch_assoc()) {
+        	$competitions[] = $row;
+    	}
+
+    	$stmt->close();
+    	$db->close();
+    	return $competitions;
+}

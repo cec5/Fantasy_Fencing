@@ -46,6 +46,7 @@ if (isset($_COOKIE['auth_token'])) {
                     			<ul class="dropdown-menu" aria-labelledby="fantasyDropdown">
                             			<li><a class="dropdown-item" href="leaderboard.php">Leaderboard</a></li>
                            			<li><a class="dropdown-item" href="fantasy.php">Draft Athletes</a></li>
+                           			<li><a class="dropdown-item" href="manage.php">Manage Athletes</a></li>
                         		</ul>
                     		</li>
                 	</ul>
