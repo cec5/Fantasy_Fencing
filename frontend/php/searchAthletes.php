@@ -4,7 +4,7 @@ include '../../backend/php/dataArrays.php';
 ?>
 <body>
 	<div class="container mt-5">
-        	<h2>Search FIE Athletes</h2>
+        	<h2>Search Athletes</h2>
         	<form action="" method="GET">
             		<div class="row g-3 align-items-end">
                 		<div class="col-md-3">
@@ -37,7 +37,7 @@ include '../../backend/php/dataArrays.php';
                         			<?php endforeach; ?>
                     			</datalist>
                 		</div>
-                		<div class="col-md-2">
+                		<div class="col-md-3">
                     			<button type="submit" class="btn btn-primary w-100">Search</button>
                 		</div>
             		</div>
@@ -45,7 +45,7 @@ include '../../backend/php/dataArrays.php';
 
         	<?php if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET)): ?>
             		<h3 class="mt-5">Search Results</h3>
-            		<table class="table table-striped">
+            		<table class="table table-striped table-bordered">
                 		<thead>
                     			<tr>
                         			<th>Name</th>

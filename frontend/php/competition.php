@@ -21,19 +21,19 @@ $results = getSpecificCompetitionResult($competitionId, $season);
         	<!-- Basic Information in Two Rows -->
         	<div class="row mt-3 justify-content-center">
             		<div class="col-md-3">
-                		<div class="border p-3 text-center" style="font-size: 1.25rem;">
+                		<div class="border p-2 text-center" style="font-size: 1.25rem;">
                     			<strong>Date</strong><br>
                     			<?= htmlspecialchars($competition['startDate'])?>
                			 </div>
             		</div>
             		<div class="col-md-3">
-                		<div class="border p-3 text-center" style="font-size: 1.25rem;">
+                		<div class="border p-2 text-center" style="font-size: 1.25rem;">
                     			<strong>Location</strong><br>
                     			<?= htmlspecialchars($competition['location'] . ', ' . $competition['country'])?>
                 		</div>
             		</div>
             		<div class="col-md-3">
-                		<div class="border p-3 text-center" style="font-size: 1.25rem;">
+                		<div class="border p-2 text-center" style="font-size: 1.25rem;">
                     			<strong>Type</strong><br>
                     			<?= htmlspecialchars($competitionCategories[$competition['category']] ?? $competition['category']) ?>
                 		</div>
@@ -41,19 +41,19 @@ $results = getSpecificCompetitionResult($competitionId, $season);
         	</div>
         	<div class="row mt-3 justify-content-center">
             		<div class="col-md-3">
-                		<div class="border p-3 text-center" style="font-size: 1.25rem;">
+                		<div class="border p-2 text-center" style="font-size: 1.25rem;">
                     			<strong>Weapon</strong><br>
                     			<?= ucfirst($competition['weapon'])?>
                 		</div>
             		</div>
             		<div class="col-md-3">
-                		<div class="border p-3 text-center" style="font-size: 1.25rem;">
+                		<div class="border p-2 text-center" style="font-size: 1.25rem;">
                     			<strong>Gender</strong><br>
                     			<?= ucfirst($competition['gender'])?>
                 		</div>
             		</div>
             		<div class="col-md-3">
-                		<div class="border p-3 text-center" style="font-size: 1.25rem;">
+                		<div class="border p-2 text-center" style="font-size: 1.25rem;">
                     			<strong>Level</strong><br>
                     			<?= htmlspecialchars($ageCategories[$competition['ageCategory']] ?? $competition['ageCategory']) ?>
                 		</div>
@@ -63,7 +63,7 @@ $results = getSpecificCompetitionResult($competitionId, $season);
         	<!-- Competition Results Table -->
         	<h4 class="mt-4">Competition Results</h4>
         	<?php if (!empty($results)):?>
-            		<table class="table table-striped">
+            		<table class="table table-striped table-bordered">
                 		<thead>
                     			<tr>
                         			<th>Place</th>

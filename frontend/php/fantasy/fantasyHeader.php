@@ -44,9 +44,9 @@ if (isset($_COOKIE['auth_token'])) {
                     		<li class="nav-item dropdown">
                     			<a class="nav-link dropdown-toggle" href="#" id="fantasyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Fantasy</a>
                     			<ul class="dropdown-menu" aria-labelledby="fantasyDropdown">
-                            			<li><a class="dropdown-item" href="../fantasy/leaderboard.php">Leaderboard</a></li>
-                           			<li><a class="dropdown-item" href="../fantasy/fantasy.php">Draft Athletes</a></li>
-                           			<li><a class="dropdown-item" href="../fantasy/manage.php">Manage Athletes</a></li>
+                            			<li><a class="dropdown-item" href="leaderboard.php">Leaderboard</a></li>
+                           			<li><a class="dropdown-item" href="fantasy.php">Draft Athletes</a></li>
+                           			<li><a class="dropdown-item" href="manage.php">Manage Athletes</a></li>
                         		</ul>
                     		</li>
                 	</ul>
@@ -57,8 +57,8 @@ if (isset($_COOKIE['auth_token'])) {
                         		<li class="nav-item dropdown">
                             			<a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
                             			<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
-                                			<li><a class="dropdown-item" href="adminAthletes.php">Manage Athletes</a></li>
-                                			<li><a class="dropdown-item" href="adminCompetitions.php">Manage Competitions</a></li>
+                                			<li><a class="dropdown-item" href="../admin/adminAthletes.php">Manage Athletes</a></li>
+                                			<li><a class="dropdown-item" href="../admin/adminCompetitions.php">Manage Competitions</a></li>
                             			</ul>
                         		</li>
                     		<?php endif; ?>

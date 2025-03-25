@@ -256,4 +256,45 @@ function scrapeCompetitionResults($season, $competitionId) {
         	return null;  // Return null if the athlete data is not found in the page
     	}
 }
+
+// Fetches array of Athlete IDs who are entered for a particular competition
+function scrapeCompetitionEntries($season, $competitionId) {
+    	$url = "https://fie.org/competition/$season/$competitionId/entry/pdf";
+
+    	// Initialize a cURL session
+    	$ch = curl_init();
+    	curl_setopt($ch, CURLOPT_URL, $url);
+    	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    	$html = curl_exec($ch);
+    	curl_close($ch);
+
+    	// Check if HTML request was successful
+    	if (!$html || strpos($html, 'Error 404') !== false || strpos($html, 'Page not found') !== false) {
+        	return null;
+    	}
+
+	// Load HTML into DOMDocument and initialize DOMXPath
+    	$dom = new DOMDocument();
+    	@$dom->loadHTML($html);
+    	$xpath = new DOMXPath($dom);
+
+    	// Query all rows in the table body
+    	$rows = $xpath->query("//tbody/tr");
+
+    	$athleteIds = [];
+
+    	// Iterate through rows and extract the 6th column (athlete ID)
+    	foreach ($rows as $row) {
+        	$columns = $row->getElementsByTagName("td");
+
+        	if ($columns->length >= 6) {
+            		$athleteId = trim($columns->item(5)->textContent); // 6th column (index 5)
+            		if (!empty($athleteId) && is_numeric($athleteId)) { 
+                		$athleteIds[] = $athleteId;
+            		}
+        	}
+    	}
+    	return $athleteIds;
+}
 ?>

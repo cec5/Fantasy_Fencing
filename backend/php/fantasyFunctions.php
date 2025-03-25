@@ -3,24 +3,16 @@
 require_once('dbConnect.php');
 
 // Helper Function: Checks if the competition is locked (1 day prior to start date)
-function checkCompetitionLock($season, $competitionId){
+function isCompetitionLocked($season, $competitionId) {
     	$db = dbConnect();
-    	$theNumber = 1;
-
-    	// Check if competition is locked (one day before start date)
-    	$stmt = $db->prepare("SELECT startDate FROM competitions WHERE competitionId = ? AND season = ?");
+   	$stmt = $db->prepare("SELECT startDate FROM competitions WHERE competitionId = ? AND season = ?");
     	$stmt->bind_param("ii", $competitionId, $season);
     	$stmt->execute();
     	$stmt->bind_result($startDate);
     	$stmt->fetch();
     	$stmt->close();
-
-    	if (strtotime($startDate) <= strtotime('-1 day')) {
-    		$db->close();
-        	return $theNumber == 0;
-    	}
     	$db->close();
-    	return $theNumber == 1;
+    	return strtotime($startDate) <= strtotime('+1 day'); // Locked 1 day before the start date
 }
 
 // Self-explantory, use in leaderboard.php
@@ -48,31 +40,6 @@ function getFantasyLeaderboard($season, $weapon, $gender, $ageCategory) {
     	return $leaderboard;
 }
 
-// Gets upcoming competitions for given filters, use for draft.php or similar
-function getUpcomingCompetitions($season, $weapon, $gender, $ageCategory) {
-    	$db = dbConnect();
-    
-    	$query = "
-		SELECT competitionId, name, startDate, location, country 
-		FROM competitions 
-		WHERE season = ? AND weapon = ? AND gender = ? AND ageCategory = ? 
-		AND startDate > CURDATE()
-		ORDER BY startDate ASC
-	    	";
-    	$stmt = $db->prepare($query);
-    	$stmt->bind_param("isss", $season, $weapon, $gender, $ageCategory);
-    	$stmt->execute();
-    	$result = $stmt->get_result();
-    
-    	$competitions = [];
-    	while ($row = $result->fetch_assoc()) {
-        	$competitions[] = $row;
-    	}
-    	$stmt->close();
-    	$db->close();
-    	return $competitions;
-}
-
 // Retrieves user current selections for a given competition
 function getUserSelections($userId, $season, $competitionId) {
     	$db = dbConnect();
@@ -97,24 +64,28 @@ function getUserSelections($userId, $season, $competitionId) {
     	return $selections;
 }
 
-// Function to calculate a user total fantasy points for a given season
+// Function to calculate a total fantasy points for all users of a given season
 // TODO: Either include this in the automated script or write a separate script
-function calculateUserFantasyPoints($userId, $season) {
+function calculateFantasyPointsForSeason($season) {
     	$db = dbConnect();
 
-    	// Sum total points for each user based on athlete results
+    	// Sum total points for all users based on athlete results
     	$query = "
         	INSERT INTO fantasyTotalPoints (userId, season, weapon, gender, ageCategory, totalPoints)
         	SELECT us.userId, c.season, c.weapon, c.gender, c.ageCategory, COALESCE(SUM(cr.points), 0)
-		FROM userSelections us
-		JOIN competitionResults cr ON us.athleteId = cr.athleteId AND us.competitionId = cr.competitionId AND us.season = cr.season
-		JOIN competitions c ON cr.competitionId = c.competitionId AND cr.season = c.season
-		WHERE us.userId = ? AND us.season = ?
-		GROUP BY us.userId, c.weapon, c.gender, c.ageCategory
-		ON DUPLICATE KEY UPDATE totalPoints = VALUES(totalPoints)
-    		";
+        	FROM userSelections us
+        	JOIN competitionResults cr ON us.athleteId = cr.athleteId 
+            		AND us.competitionId = cr.competitionId 
+            		AND us.season = cr.season
+        	JOIN competitions c ON cr.competitionId = c.competitionId 
+            		AND cr.season = c.season
+        	WHERE us.season = ?
+        	GROUP BY us.userId, c.season, c.weapon, c.gender, c.ageCategory
+        	ON DUPLICATE KEY UPDATE totalPoints = VALUES(totalPoints)
+    	";
+
     	$stmt = $db->prepare($query);
-    	$stmt->bind_param("ii", $userId, $season);
+    	$stmt->bind_param("i", $season);
     	$stmt->execute();
     	$stmt->close();
     	$db->close();
@@ -124,7 +95,7 @@ function calculateUserFantasyPoints($userId, $season) {
 function updateUserSelection($userId, $season, $competitionId, $athleteId, $action) {
     	$db = dbConnect();
     	
-    	if (!checkCompetitionLock($season, $competitionId){
+    	if (isCompetitionLocked($season, $competitionId)){
     		$db->close();
     		return ["success" => false, "message" => "Athlete selections for this competition is locked"];
     	}
@@ -191,5 +162,81 @@ function updateUserSelection($userId, $season, $competitionId, $athleteId, $acti
     	return ["success" => false, "message" => "ERROR; Invalid Action "];
 }
 
-// TODO: Function needed for retrieval of athletes, either reuse searchAthletes from databaseFunctions.php, or modify it to avoid duplicate entries, place modified version here
+// Modified version of getCompetitions(); used in fantasy.php to retrieve and filter for upcoming competitions
+function getFilteredUpcomingCompetitions($season, $weapon = '', $gender = '', $ageCategory = '') {
+    	$db = dbConnect();
+    
+    	$query = "
+        	SELECT competitionId, name, startDate, location, country, category, weapon, gender, ageCategory 
+        	FROM competitions 
+        	WHERE season = ? AND startDate > CURDATE()
+    	";
+    	$params = [$season];
+    	$types = "i";
 
+    	if ($weapon) {
+        	$query .= " AND weapon = ?";
+        	$params[] = $weapon;
+        	$types .= "s";
+    	}
+    	if ($gender) {
+        $query .= " AND gender = ?";
+        $params[] = $gender;
+        $types .= "s";
+    	}
+    	if ($ageCategory) {
+        	$query .= " AND ageCategory = ?";
+        	$params[] = $ageCategory;
+        	$types .= "s";
+    	}
+
+    	$query .= " ORDER BY startDate ASC";
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param($types, ...$params);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+    
+   	$competitions = [];
+    	while ($row = $result->fetch_assoc()) {
+        	$competitions[] = $row;
+    	}
+    
+    	$stmt->close();
+    	$db->close();
+    	return $competitions;
+}
+
+// Get all competitions user has made selections for
+function getUserCompetitions($userId, $season, $isPast, $weapon = '', $gender = '', $ageCategory = '') {
+    	$db = dbConnect();
+
+    	$query = "
+        	SELECT DISTINCT c.*
+        	FROM competitions c
+        	JOIN userSelections us ON c.competitionId = us.competitionId AND c.season = us.season
+        	WHERE us.userId = ? AND c.season = ?
+    	";
+    	$params = [$userId, $season];
+    	$types = "ii";
+
+    	if ($weapon) { $query .= " AND c.weapon = ?"; $params[] = $weapon; $types .= "s"; }
+    	if ($gender) { $query .= " AND c.gender = ?"; $params[] = $gender; $types .= "s"; }
+    	if ($ageCategory) { $query .= " AND c.ageCategory = ?"; $params[] = $ageCategory; $types .= "s"; }
+
+    	$query .= $isPast ? " AND c.startDate <= CURDATE()" : " AND c.startDate > CURDATE()";
+    	$query .= " ORDER BY c.startDate ASC";
+
+    	$stmt = $db->prepare($query);
+    	$stmt->bind_param($types, ...$params);
+    	$stmt->execute();
+    	$result = $stmt->get_result();
+
+    	$competitions = [];
+    	while ($row = $result->fetch_assoc()) {
+        	$competitions[] = $row;
+    	}
+
+    	$stmt->close();
+    	$db->close();
+    	return $competitions;
+}

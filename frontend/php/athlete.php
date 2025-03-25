@@ -97,7 +97,7 @@ $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
 
         <!-- Competition Results Table -->
         <h5 class="mt-4"><?= ucfirst($ageCategories[$ageCategory] ?? 'Senior') ?> Competition Results</h5>
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
             	<thead>
                 	<tr>
                     		<th>Date</th>
