@@ -112,7 +112,7 @@ $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
                 	<?php foreach ($results as $result):?>
                     		<tr>
                         		<td><?= htmlspecialchars($result['startDate'])?></td>
-                        		<td><a href="competition.php?season=<?= $season?>&id=<?= $result['competitionId'] ?>"><?= htmlspecialchars($result['name']) ?></a></td>
+                        		<td><a href="c/competition.php?season=<?= $season?>&id=<?= $result['competitionId'] ?>"><?= htmlspecialchars($result['name']) ?></a></td>
                         		<td><?= htmlspecialchars($competitionCategories[$result['category']] ?? $result['category']) ?></td>
                         		<td><?= htmlspecialchars($result['location'] . ', ' . $result['country']) ?></td>
                         		<td><?= $result['finished'] == 1 ? '🥇' : ($result['finished'] == 2 ? '🥈' : ($result['finished'] == 3 ? '🥉' : htmlspecialchars($result['finished'])))?></td>
