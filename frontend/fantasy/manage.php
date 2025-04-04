@@ -1,9 +1,9 @@
 <?php
-require_once('fantasyHeader.php');
-require_once('../../../backend/php/databaseFunctions.php');
-require_once('../../../backend/php/fantasyFunctions.php');
-require_once('../../../backend/php/dataArrays.php');
-require_once('fantasyValidation.php');
+include(dirname(__DIR__).'/common/header.php');
+require_once(dirname(__DIR__).'/common/validation.php');
+require_once(dirname(__DIR__).'/../backend/php/dataArrays.php');
+require_once(dirname(__DIR__).'/../backend/php/databaseFunctions.php');
+require_once(dirname(__DIR__).'/../backend/php/fantasyFunctions.php');
 
 $season = $_GET['season'] ?? '2025';
 $weapon = $_GET['weapon'] ?? '';
@@ -94,7 +94,7 @@ $ageCategory = $_GET['ageCategory'] ?? '';
 					<tbody>
 						<tr>
 				            		<td><?= htmlspecialchars($comp['startDate']) ?></td>
-				            		<td><a href="draft.php?season=<?= $season ?>&id=<?= $comp['competitionId']?>"><?= htmlspecialchars($comp['name'])?></a></td>
+				            		<td><a href="fantasy/draft.php?season=<?= $season ?>&id=<?= $comp['competitionId']?>"><?= htmlspecialchars($comp['name'])?></a></td>
 				            		<td><?= htmlspecialchars($comp['location'] . ', ' . $comp['country']) ?></td>
 				            	
 				            		<td><?= htmlspecialchars($competitionCategories[$comp['category']] ?? $comp['category']) ?></td>
@@ -112,7 +112,7 @@ $ageCategory = $_GET['ageCategory'] ?? '';
 				            	<?php foreach ($sel as $i => $ath): ?>
 				                	<tr>
 				                    		<td><?= $i + 1 ?></td>
-				                    		<td><a href="../athlete.php?id=<?= $ath['athleteId']?>"><?= htmlspecialchars($ath['name']) ?></a></td>
+				                    		<td><a href="a/athlete.php?id=<?= $ath['athleteId']?>"><?= htmlspecialchars($ath['name']) ?></a></td>
 				                    		<td><?= $validCountryCodes[$ath['nationality']] ?? $ath['nationality'] ?></td>
 				                	</tr>
 				           	<?php endforeach; ?>
@@ -153,7 +153,7 @@ $ageCategory = $_GET['ageCategory'] ?? '';
 					<tbody>
 						<tr>
 				            		<td><?= htmlspecialchars($comp['startDate']) ?></td>
-				            		<td><a href="../competition.php?season=<?= $season ?>&id=<?= $comp['competitionId']?>"><?= htmlspecialchars($comp['name'])?></a></td>
+				            		<td><a href="c/competition.php?season=<?= $season ?>&id=<?= $comp['competitionId']?>"><?= htmlspecialchars($comp['name'])?></a></td>
 				            		<td><?= htmlspecialchars($comp['location'] . ', ' . $comp['country']) ?></td>
 				            	
 				            		<td><?= htmlspecialchars($competitionCategories[$comp['category']] ?? $comp['category']) ?></td>
@@ -171,7 +171,7 @@ $ageCategory = $_GET['ageCategory'] ?? '';
 		                    		<?php foreach ($sel as $i => $ath): ?>
 		                        		<tr>
 		                            			<td><?= $i + 1 ?></td>
-		                            			<td><a href="../athlete.php?id=<?= $ath['athleteId']?>"><?= htmlspecialchars($ath['name']) ?></a></td>
+		                            			<td><a href="a/athlete.php?id=<?= $ath['athleteId']?>"><?= htmlspecialchars($ath['name']) ?></a></td>
 		                            			<td><?= $validCountryCodes[$ath['nationality']] ?? $ath['nationality'] ?></td>
 		                            			<td><?= $pointsMap[$ath['athleteId']] ?? 0 ?></td>
 		                        		</tr>
@@ -185,4 +185,3 @@ $ageCategory = $_GET['ageCategory'] ?? '';
 </div>
 </body>
 </html>
-

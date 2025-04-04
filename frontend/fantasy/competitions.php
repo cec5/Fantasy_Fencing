@@ -1,8 +1,8 @@
-<?php 
-require_once('fantasyHeader.php'); 
-require_once('../../../backend/php/databaseFunctions.php');
-require_once('../../../backend/php/dataArrays.php');
-require_once('../../../backend/php/fantasyFunctions.php');
+<?php // This page lists competitions that players can currently draft for
+include(dirname(__DIR__).'/common/header.php'); 
+require_once(dirname(__DIR__).'/../backend/php/dataArrays.php');
+require_once(dirname(__DIR__).'/../backend/php/databaseFunctions.php');
+require_once(dirname(__DIR__).'/../backend/php/fantasyFunctions.php');
 
 // Get filter values from URL parameters
 $season = $_GET['season'] ?? '2025';
@@ -70,7 +70,7 @@ $competitions = getFilteredUpcomingCompetitions($season, $weapon, $gender, $ageC
                     		<?php foreach ($competitions as $comp): ?>
                         		<tr>
                             			<td><?= htmlspecialchars($comp['startDate']) ?></td>
-                            			<td><a href="draft.php?season=<?= $season ?>&id=<?= $comp['competitionId'] ?>"><?= htmlspecialchars($comp['name']) ?></a></td>
+                            			<td><a href="fantasy/draft.php?season=<?= $season ?>&id=<?= $comp['competitionId'] ?>"><?= htmlspecialchars($comp['name']) ?></a></td>
                             			<td><?= htmlspecialchars($comp['location'] . ', ' . $comp['country']) ?></td>
                             			<td><?= htmlspecialchars($competitionCategories[$comp['category']] ?? $comp['category']) ?></td>
                             			<td><?= ucfirst($comp['weapon']) ?></td>

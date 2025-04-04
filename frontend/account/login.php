@@ -1,7 +1,7 @@
 <?php
-include 'header.php';
-require_once('../../backend/php/userFunctions.php');
-require_once('../../backend/vendor/autoload.php');
+include(dirname(__DIR__).'/common/header.php'); 
+require_once(dirname(__DIR__).'/../backend/php/userFunctions.php');
+require_once(dirname(__DIR__).'/../backend/vendor/autoload.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     	$username = $_POST['username'];
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     	<div class="container mt-5">
         	<h2>Login</h2>
-        	<form action="login.php" method="POST">
+        	<form action="account/login.php" method="POST">
             		<div class="mb-3">
                 		<label for="username" class="form-label">Username</label>
                 		<input type="text" class="form-control" id="username" name="username" required>

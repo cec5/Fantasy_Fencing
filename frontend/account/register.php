@@ -1,6 +1,7 @@
 <?php 
-include('header.php');
-require_once('../../backend/php/dataArrays.php');
+include(dirname(__DIR__).'/common/header.php'); 
+require_once(dirname(__DIR__).'/../backend/php/userFunctions.php');
+require_once(dirname(__DIR__).'/../backend/php/dataArrays.php');
 ?>
 
 <!DOCTYPE html>
@@ -59,20 +60,19 @@ require_once('../../backend/php/dataArrays.php');
         	<h2>Register</h2>
         	<?php
         	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            		require_once('../../backend/php/userFunctions.php');
             		$username = $_POST['username'];
             		$email = $_POST['email'];
             		$nationality = $_POST['countryCode'];
             		$password = $_POST['password'];
             		$result = registerUser($username, $email, $nationality, $password);
             		if ($result === true) {
-                		echo "<div class='alert alert-success mt-3'>Registration successful! <a href='login.php'>Click here to log in</a>.</div>";
+                		echo "<div class='alert alert-success mt-3'>Registration successful! <a href='account/login.php'>Click here to log in</a>.</div>";
             		} else {
                 		echo "<div class='alert alert-danger mt-3'>" . htmlspecialchars($result) . "</div>";
             		}
         	}
         	?>
-        	<form id="registerForm" action="register.php" method="POST" class="needs-validation" novalidate>
+        	<form id="registerForm" action="account/register.php" method="POST" class="needs-validation" novalidate>
             		<div class="mb-3">
                 		<label for="username" class="form-label">Username</label>
                 		<input type="text" class="form-control" id="username" name="username" required>

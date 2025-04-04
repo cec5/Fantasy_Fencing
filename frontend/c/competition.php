@@ -1,7 +1,7 @@
 <?php 
-include 'header.php'; 
-include '../../backend/php/dataArrays.php';
-include '../../backend/php/databaseFunctions.php';
+include(dirname(__DIR__).'/common/header.php'); 
+require_once(dirname(__DIR__).'/../backend/php/dataArrays.php');
+require_once(dirname(__DIR__).'/../backend/php/databaseFunctions.php');
 
 $season = $_GET['season'];
 $competitionId = $_GET['id'];
@@ -76,7 +76,7 @@ $results = getSpecificCompetitionResult($competitionId, $season);
 				    	<?php foreach ($results as $result):?>
 				        	<tr>
 				            		<td><?= $result['place'] ?></td>
-				            		<td><a href="athlete.php?id=<?= $result['athleteId']?>"><?= htmlspecialchars($result['name']) ?></a></td>
+				            		<td><a href="a/athlete.php?id=<?= $result['athleteId']?>"><?= htmlspecialchars($result['name']) ?></a></td>
 				            		<td><?= htmlspecialchars($validCountryCodes[$result['nationality']] ?? $result['nationality']) ?></td>
 				            		<td><?= htmlspecialchars($result['points'])?></td>
 				        	</tr>

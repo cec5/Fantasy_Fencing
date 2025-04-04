@@ -1,8 +1,8 @@
 <?php
-require_once('adminHeader.php');
-require_once('adminValidation.php');
-require_once('../../../backend/php/scraper/scraperFunctions.php');
-require_once('../../../backend/php/databaseFunctions.php');
+include(dirname(__DIR__).'/common/header.php');
+require_once(dirname(__DIR__).'/admin/adminValidation.php');
+require_once(dirname(__DIR__).'/../backend/php/scraper/scraperFunctions.php');
+require_once(dirname(__DIR__).'/../backend/php/databaseFunctions.php');
 
 $message = '';
 $success = false;
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manualSubmit'])) {
 
     	<!-- Automatic Athlete Addition -->
     	<h3 class="mt-4">Add Athlete Automatically</h3>
-    	<form method="POST" action="adminAthletes.php" class="mb-4">
+    	<form method="POST" action="admin/adminAthletes.php" class="mb-4">
         	<div class="mb-3">
             		<label for="athleteID" class="form-label">Athlete ID:</label>
             		<input type="number" class="form-control" id="athleteID" name="athleteID" required>
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manualSubmit'])) {
 
     	<!-- Manual Athlete Addition -->
     	<h3>Add Athlete Manually</h3>
-    	<form method="POST" action="adminAthletes.php">
+    	<form method="POST" action="admin/adminAthletes.php">
         	<div class="mb-3">
             		<label for="id" class="form-label">Athlete ID:</label>
             		<input type="number" class="form-control" id="id" name="id" required>

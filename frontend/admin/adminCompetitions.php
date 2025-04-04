@@ -1,8 +1,8 @@
 <?php
-require_once('adminHeader.php');
-require_once('adminValidation.php');
-require_once('../../../backend/php/scraper/scraperFunctions.php');
-require_once('../../../backend/php/databaseFunctions.php');
+include(dirname(__DIR__).'/common/header.php');
+require_once(dirname(__DIR__).'/admin/adminValidation.php');
+require_once(dirname(__DIR__).'/../backend/php/scraper/scraperFunctions.php');
+require_once(dirname(__DIR__).'/../backend/php/databaseFunctions.php');
 
 $message = '';
 $success = false;
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addCompetitionAthlete
 
     	<!-- Update Athlete Points -->
     	<h3 class="mt-4">Update Athlete Points</h3>
-    	<form method="POST" action="adminCompetitions.php" class="mb-4">
+    	<form method="POST" action="admin/adminCompetitions.php" class="mb-4">
 		<div class="mb-3">
 		    	<label for="season" class="form-label">Season:</label>
 		    	<input type="number" class="form-control" id="season" name="season" required>
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addCompetitionAthlete
 
     	<!-- Add Competition Data -->
     	<h3>Add Competition Data</h3>
-    	<form method="POST" action="adminCompetitions.php" class="mb-4">
+    	<form method="POST" action="admin/adminCompetitions.php" class="mb-4">
         	<div class="mb-3">
             		<label for="compSeason" class="form-label">Season:</label>
             		<input type="number" class="form-control" id="compSeason" name="compSeason" required>
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addCompetitionAthlete
 
     	<!-- Update Competition Results -->
     	<h3>Update Competition Results</h3>
-    	<form method="POST" action="adminCompetitions.php" class="mb-4">
+    	<form method="POST" action="admin/adminCompetitions.php" class="mb-4">
         	<div class="mb-3">
             		<label for="resultSeason" class="form-label">Season:</label>
             		<input type="number" class="form-control" id="resultSeason" name="resultSeason" required>
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addCompetitionAthlete
 
     	<!-- Add Competition Athletes -->
     	<h3>Add Competition Athletes</h3>
-    	<form method="POST" action="adminCompetitions.php">
+    	<form method="POST" action="admin/adminCompetitions.php">
         	<div class="mb-3">
             		<label for="athletesSeason" class="form-label">Season:</label>
             		<input type="number" class="form-control" id="athletesSeason" name="athletesSeason" required>

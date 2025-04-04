@@ -1,9 +1,9 @@
-<?php 
-require_once('fantasyHeader.php'); 
-require_once('../../../backend/php/dataArrays.php');
-require_once('../../../backend/php/databaseFunctions.php');
-require_once('../../../backend/php/otherFunctions.php');
-require_once('../../../backend/php/fantasyFunctions.php');
+<?php // This page shows the fantasy points leaderboard (Dev wrote this page)
+include(dirname(__DIR__).'/common/header.php'); 
+require_once(dirname(__DIR__).'/../backend/php/dataArrays.php');
+require_once(dirname(__DIR__).'/../backend/php/databaseFunctions.php');
+require_once(dirname(__DIR__).'/../backend/php/fantasyFunctions.php');
+require_once(dirname(__DIR__).'/../backend/php/otherFunctions.php');
 
 $season = $_GET['season'] ?? '2025';
 $weapon = $_GET['weapon'] ?? 'epee';

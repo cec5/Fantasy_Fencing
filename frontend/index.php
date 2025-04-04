@@ -1,4 +1,4 @@
-<?php include 'header.php';?>
+<?php include(__DIR__.'/common/header.php');?>
 <body>
     	<!-- Content Section -->
     	<div class="container mt-5">

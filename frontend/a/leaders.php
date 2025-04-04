@@ -1,8 +1,8 @@
 <?php 
-include 'header.php'; 
-include '../../backend/php/dataArrays.php';
-include '../../backend/php/databaseFunctions.php';
-include '../../backend/php/otherFunctions.php';
+include(dirname(__DIR__).'/common/header.php'); 
+require_once(dirname(__DIR__).'/../backend/php/dataArrays.php');
+require_once(dirname(__DIR__).'/../backend/php/databaseFunctions.php');
+require_once(dirname(__DIR__).'/../backend/php/otherFunctions.php');
 
 $season = $_GET['season'] ?? '2025';
 $weapon = $_GET['weapon'] ?? 'epee';
@@ -12,6 +12,8 @@ $ageCategory = $_GET['ageCategory'] ?? 'S';
 $topEarners = getTopEarners($season, $weapon, $gender, $ageCategory);
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
 <body>
     	<div class="container mt-5">
         	<h2>International Points Leaders</h2>
@@ -78,7 +80,7 @@ $topEarners = getTopEarners($season, $weapon, $gender, $ageCategory);
                 	?>
 		            	<tr>
 		                	<td><?= $rank ?></td>
-		                	<td><a href="athlete.php?id=<?= $athlete['id'] ?>"><?= htmlspecialchars($athlete['name']) ?></a></td>
+		                	<td><a href="a/athlete.php?id=<?= $athlete['id'] ?>"><?= htmlspecialchars($athlete['name']) ?></a></td>
 		                	<td><?= htmlspecialchars($validCountryCodes[$athlete['nationality']] ?? $athlete['nationality']) ?></td>
 		                	<td><?= htmlspecialchars($athlete['points']) ?></td>
 		            	</tr>
