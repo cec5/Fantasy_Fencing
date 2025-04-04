@@ -1,7 +1,11 @@
-<?php 
-include 'header.php'; 
-include '../../backend/php/dataArrays.php';
+<?php // This page handles searching athletes
+include(dirname(__DIR__).'/common/header.php'); 
+require_once(dirname(__DIR__).'/../backend/php/dataArrays.php');
+require_once(dirname(__DIR__).'/../backend/php/databaseFunctions.php');
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
 <body>
 	<div class="container mt-5">
         	<h2>Search Athletes</h2>
@@ -56,7 +60,6 @@ include '../../backend/php/dataArrays.php';
                 		</thead>
                 		<tbody>
 		            		<?php
-		            		require_once '../../backend/php/databaseFunctions.php';
 		            		$countryCode = array_search($_GET['country'] ?? '', $validCountryCodes) ?: ''; // Convert country name to code
 		            		$results = searchAthletes($_GET['name'] ?? '', $_GET['gender'] ?? '', $_GET['weapon'] ?? '', $countryCode);
 				    	foreach ($results as $athlete): 
@@ -68,7 +71,7 @@ include '../../backend/php/dataArrays.php';
 				        	$countryName = $validCountryCodes[$athlete['nationality']] ?? $athlete['nationality'];
 				    	?>
 				        <tr>
-		                    		<td><a href="athlete.php?id=<?= $athlete['id'] ?>"><?= htmlspecialchars($athlete['name']) ?></a></td>
+		                    		<td><a href="a/athlete.php?id=<?= $athlete['id'] ?>"><?= htmlspecialchars($athlete['name']) ?></a></td>
 		                    		<td><?= htmlspecialchars($genderDisplay) ?></td>
 		                    		<td><?= htmlspecialchars($weaponDisplay) ?></td>
 		                    		<td><?= htmlspecialchars($countryName) ?></td>

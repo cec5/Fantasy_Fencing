@@ -1,9 +1,9 @@
-<?php 
-require_once('fantasyHeader.php'); 
-require_once(__DIR__ . '/../../../backend/php/databaseFunctions.php');
-require_once(__DIR__ . '/../../../backend/php/fantasyFunctions.php');
-require_once(__DIR__ . '/../../../backend/php/dataArrays.php');
-require_once(__DIR__ . '/fantasyValidation.php');
+<?php // This page allows a user to select/draft athletes for a specific competition
+include(dirname(__DIR__).'/common/header.php');
+require_once(dirname(__DIR__).'/common/validation.php');
+require_once(dirname(__DIR__).'/../backend/php/dataArrays.php');
+require_once(dirname(__DIR__).'/../backend/php/databaseFunctions.php');
+require_once(dirname(__DIR__).'/../backend/php/fantasyFunctions.php');
 
 $season = $_GET['season'] ?? '';
 $competitionId = $_GET['id'] ?? '';
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isLocked) {
 
    	if (!empty($athleteId) && in_array($action, ['add', 'remove'])) {
         	$response = updateUserSelection($userId, $season, $competitionId, $athleteId, $action);
-        	echo "<script>alert('{$response['message']}'); window.location.href = 'draft.php?season=$season&id=$competitionId';</script>";
+        	echo "<script>alert('{$response['message']}'); window.location.href = 'fantasy/draft.php?season=$season&id=$competitionId';</script>";
         	exit();
     	}
 }

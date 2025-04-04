@@ -1,7 +1,7 @@
-<?php 
-include 'header.php'; 
-include '../../backend/php/dataArrays.php';
-include '../../backend/php/databaseFunctions.php';
+<?php // This page handles searching competitions
+include(dirname(__DIR__).'/common/header.php'); 
+require_once(dirname(__DIR__).'/../backend/php/dataArrays.php');
+require_once(dirname(__DIR__).'/../backend/php/databaseFunctions.php');
 
 $season = $_GET['season'] ?? '2025';
 $weapon = $_GET['weapon'] ?? 'epee';
@@ -71,7 +71,7 @@ $competitions = getCompetitions($season, $weapon, $gender, $ageCategory);
                			<?php foreach ($competitions as $competition):?>
                     			<tr>
                         			<td><?= htmlspecialchars($competition['startDate']) ?></td>
-                        			<td><a href="competition.php?season=<?= $competition['season'] ?>&id=<?= $competition['competitionId']?>"><?= htmlspecialchars($competition['name'])?></a></td>
+                        			<td><a href="c/competition.php?season=<?= $competition['season'] ?>&id=<?= $competition['competitionId']?>"><?= htmlspecialchars($competition['name'])?></a></td>
                         			<td><?= htmlspecialchars($competitionCategories[$competition['category']] ?? $competition['category']) ?></td>
                         			<td><?= htmlspecialchars($competition['location'] . ', ' . $competition['country'])?></td>
                     			</tr>

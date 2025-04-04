@@ -1,7 +1,7 @@
 <?php
-include 'header.php';
-require_once 'validation.php';
-require_once '../../backend/php/userFunctions.php';
+include(dirname(__DIR__).'/common/header.php'); 
+require_once(dirname(__DIR__).'/common/validation.php'); 
+require_once(dirname(__DIR__).'/../backend/php/userFunctions.php');
 
 // Fetch current user info based on user ID from validated token
 $userInfo = getUserInfo($userId);
@@ -38,8 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     	if ($result === true) {
         	// Redirect with a success message
-        	header("Location: profile.php?message=" . urlencode("Profile successfully updated.") . "&success=1");
-        	exit;
+        	//header("Location: profile.php?message=" . urlencode("Profile successfully updated.") . "&success=1");
+        	echo "<script> alert('Profile Successfully Updated!'); window.location.href = 'account/profile.php'; </script>";
     	} else {
         	$message = $result;
         	$success = false;
@@ -108,7 +108,7 @@ if (isset($_GET['message']) && isset($_GET['success'])) {
         	<?php endif; ?>
 
         	<!-- Form to update username -->
-        	<form action="profile.php" method="POST">
+        	<form action="account/profile.php" method="POST">
             		<div class="mb-3">
                 		<label class="form-label">Current Username: <?= htmlspecialchars($userInfo['username']) ?></label>
                 		<input type="text" class="form-control" name="username" placeholder="New Username">
@@ -117,7 +117,7 @@ if (isset($_GET['message']) && isset($_GET['success'])) {
         	</form>
         	<hr>
         	<!-- Form to update email -->
-        	<form action="profile.php" method="POST">
+        	<form action="account/profile.php" method="POST">
             		<div class="mb-3">
                 		<label class="form-label">Current Email: <?= htmlspecialchars($userInfo['email']) ?></label>
                 		<input type="email" class="form-control" name="email" placeholder="New Email">
@@ -126,7 +126,7 @@ if (isset($_GET['message']) && isset($_GET['success'])) {
         	</form>
         	<hr>
 		<!-- Form to update nationality -->
-        	<form action="profile.php" method="POST">
+        	<form action="account/profile.php" method="POST">
             		<div class="mb-3">
                 		<label class="form-label">Current Nationality: <?= htmlspecialchars($validCountryCodes[$userInfo['nationality']]) ?></label>
                 		<input type="text" class="form-control" id="nationality" list="countryList" autocomplete="off" placeholder="New Nationality">
@@ -137,7 +137,7 @@ if (isset($_GET['message']) && isset($_GET['success'])) {
         	</form>
         	<hr>
         	<!-- Form to update password -->
-        	<form action="profile.php" method="POST">
+        	<form action="account/profile.php" method="POST">
             		<div class="mb-3">
                 		<label for="currentPassword" class="form-label">Current Password</label>
                 		<input type="password" class="form-control" id="currentPassword" name="currentPassword" required>

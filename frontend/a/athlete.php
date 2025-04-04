@@ -1,12 +1,13 @@
 <?php 
-include 'header.php'; 
-include '../../backend/php/dataArrays.php';
-include '../../backend/php/databaseFunctions.php';
-include '../../backend/php/otherFunctions.php';
+include(dirname(__DIR__).'/common/header.php'); 
+require_once(dirname(__DIR__).'/../backend/php/dataArrays.php');
+require_once(dirname(__DIR__).'/../backend/php/databaseFunctions.php');
+require_once(dirname(__DIR__).'/../backend/php/otherFunctions.php');
 
-// Get athlete ID from URL
+// Get info from URL
 $athleteId = $_GET['id'];
 $season = $_GET['season'] ?? '2025';
+$ageCategory = $_GET['ageCategory'] ?? 'S';
 
 // Fetch Athlete Basic Information
 $athlete = getAthleteInfo($athleteId);
@@ -14,9 +15,6 @@ $athlete = getAthleteInfo($athleteId);
 // Fetch available weapons and set default weapon if none is specified
 $availableWeapons = getAthleteWeapons($athleteId);
 $weapon = $_GET['weapon'] ?? $availableWeapons[0]; // Set to primary weapon if not set
-
-// Fetch age category from the URL or default to 'S' (Senior)
-$ageCategory = $_GET['ageCategory'] ?? 'S';
 
 // Fetch total points for the selected season, weapon, and age category
 $totalPoints = getTotalPoints($athleteId, $season, $weapon, $ageCategory);
@@ -29,6 +27,8 @@ $twoLetterCountryCode = $countryCodeMap[$athlete['nationality']] ?? '';
 $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
 <body>
     	<div class="container mt-5">
         	<!-- Athlete Name as Main Title with Flag Emoji -->
@@ -63,7 +63,7 @@ $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
         <ul class="nav nav-tabs mt-4" id="seasonTab" role="tablist">
             	<?php foreach ($seasons as $seasonCode => $seasonName):?>
                 	<li class="nav-item" role="presentation">
-                    		<a class="nav-link <?= $seasonCode == $season ? 'active' : '' ?>" href="?id=<?= $athleteId ?>&season=<?= $seasonCode?>&weapon=<?= $weapon?>"><?= $seasonName?></a>
+                    		<a class="nav-link <?= $seasonCode == $season ? 'active' : '' ?>" href="a/athlete.php?id=<?= $athleteId ?>&season=<?= $seasonCode?>&weapon=<?= $weapon?>"><?= $seasonName?></a>
                 	</li>
             	<?php endforeach;?>
         </ul>
@@ -74,7 +74,7 @@ $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
                 	<label for="weapon" class="form-label">Select Weapon:</label>
                 	<select class="form-select" id="weapon" onchange="location = this.value;">
                     		<?php foreach ($availableWeapons as $w):?>
-                        		<option value="?id=<?= $athleteId?>&season=<?= $season?>&weapon=<?= $w?>" <?= $w == $weapon ? 'selected' : '' ?>><?= ucfirst($w)?></option>
+                        		<option value="a/athlete.php?id=<?= $athleteId?>&season=<?= $season?>&weapon=<?= $w?>" <?= $w == $weapon ? 'selected' : '' ?>><?= ucfirst($w)?></option>
                     		<?php endforeach;?>
                 	</select>
             	</div>
@@ -85,7 +85,7 @@ $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
             	<label for="ageCategory" class="form-label">Select Age Category:</label>
             	<select class="form-select" id="ageCategory" onchange="location = this.value;">
                 	<?php foreach ($ageCategories as $code => $category): ?>
-                    		<option value="?id=<?= $athleteId ?>&season=<?= $season ?>&weapon=<?= $weapon ?>&ageCategory=<?= $code ?>" <?= $ageCategory == $code ? 'selected' : '' ?>>
+                    		<option value="a/athlete.php?id=<?= $athleteId ?>&season=<?= $season ?>&weapon=<?= $weapon ?>&ageCategory=<?= $code ?>" <?= $ageCategory == $code ? 'selected' : '' ?>>
                         	<?= htmlspecialchars($category) ?>
                     		</option>
                 	<?php endforeach; ?>
