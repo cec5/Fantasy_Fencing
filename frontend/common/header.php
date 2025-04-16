@@ -47,7 +47,7 @@ if (isset($_COOKIE['auth_token'])) {
                     			<ul class="dropdown-menu" aria-labelledby="fantasyDropdown">
                             			<li><a class="dropdown-item" href="fantasy/leaderboard.php">Leaderboard</a></li>
                            			 <li><a class="dropdown-item" href="fantasy/competitions.php">Draft Athletes</a></li>
-                           			 <li><a class="dropdown-item" href="fantasy/manage.php">Manage Athletes</a></li>
+                           			 <?php if (isset($_COOKIE['auth_token'])): ?><li><a class="dropdown-item" href="fantasy/manage.php">Manage Athletes</a></li><?php endif; ?>
                         		</ul>
                     		</li>
                 	</ul>
@@ -74,8 +74,8 @@ if (isset($_COOKIE['auth_token'])) {
                                 			<li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
                             			<?php else: ?>
 		                        		<!-- User is not logged in, show Register and Login options -->
-		                        		<li><a class="dropdown-item" href="account/register.php">Register</a></li>
 		                        		<li><a class="dropdown-item" href="account/login.php">Login</a></li>
+		                        		<li><a class="dropdown-item" href="account/register.php">Register</a></li>
                            			 <?php endif; ?>
                         		</ul>
                    		</li>
