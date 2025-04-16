@@ -63,7 +63,7 @@ $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
         <ul class="nav nav-tabs mt-4" id="seasonTab" role="tablist">
             	<?php foreach ($seasons as $seasonCode => $seasonName):?>
                 	<li class="nav-item" role="presentation">
-                    		<a class="nav-link <?= $seasonCode == $season ? 'active' : '' ?>" href="a/athlete.php?id=<?= $athleteId ?>&season=<?= $seasonCode?>&weapon=<?= $weapon?>"><?= $seasonName?></a>
+                    		<a class="nav-link <?= $seasonCode == $season ? 'active' : '' ?>" href="a/athlete.php?id=<?= $athleteId ?>&season=<?= $seasonCode?>&weapon=<?= $weapon?>&ageCategory=<?= $ageCategory?>"><?= $seasonName?></a>
                 	</li>
             	<?php endforeach;?>
         </ul>
@@ -74,7 +74,7 @@ $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
                 	<label for="weapon" class="form-label">Select Weapon:</label>
                 	<select class="form-select" id="weapon" onchange="location = this.value;">
                     		<?php foreach ($availableWeapons as $w):?>
-                        		<option value="a/athlete.php?id=<?= $athleteId?>&season=<?= $season?>&weapon=<?= $w?>" <?= $w == $weapon ? 'selected' : '' ?>><?= ucfirst($w)?></option>
+                        		<option value="a/athlete.php?id=<?= $athleteId?>&season=<?= $season?>&weapon=<?= $w?>&ageCategory=<?= $ageCategory?>" <?= $w == $weapon ? 'selected' : '' ?>><?= ucfirst($w)?></option>
                     		<?php endforeach;?>
                 	</select>
             	</div>
