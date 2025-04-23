@@ -1,6 +1,3 @@
-<?php 
-require_once('fantasyHeader.php'); 
-?>
 
 <!DOCTYPE html>
 <html lang="en">
