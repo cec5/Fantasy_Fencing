@@ -1,4 +1,4 @@
-<footer class="bg-dark text-white text-center py-2 mt-3">
+<footer class="bg-dark text-white text-center py-3 mt-3">
         <div class="container">
                 <small>
                         <?= date("Y");?> | The Fantasy Fencing Project |
