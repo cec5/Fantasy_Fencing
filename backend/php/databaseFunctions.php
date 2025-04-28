@@ -154,22 +154,29 @@ function searchAthletes($name = '', $gender = '', $weapon = '', $country = '') {
     	$types = '';
 
     	if ($name) {
-        	$query .= " AND name LIKE ?";
-        	$params[] = '%' . $name . '%';
-        	$types .= 's';
+        	$query .= " AND (name LIKE ? OR CONCAT(firstName, ' ', lastName) LIKE ? OR firstName LIKE ? OR lastName LIKE ?)";
+        	$searchTerm = '%' . $name . '%';
+        	$params[] = $searchTerm;
+        	$params[] = $searchTerm;
+        	$params[] = $searchTerm;
+        	$params[] = $searchTerm;
+        	$types .= 'ssss';
     	}
+
     	if ($gender) {
         	$query .= " AND gender = ?";
         	$params[] = $gender;
-        	$types .= 's';
+       		$types .= 's';
     	}
+
     	if ($weapon) {
         	$query .= " AND (weapon = ? OR weapon2 = ?)";
         	$params[] = $weapon;
         	$params[] = $weapon;
         	$types .= 'ss';
     	}
-   	if ($country) {
+
+    	if ($country) {
         	$query .= " AND nationality = ?";
         	$params[] = strtoupper($country);
         	$types .= 's';
@@ -181,14 +188,14 @@ function searchAthletes($name = '', $gender = '', $weapon = '', $country = '') {
     	}
     	$stmt->execute();
     	$result = $stmt->get_result();
-    
+
     	$athletes = [];
     	while ($row = $result->fetch_assoc()) {
         	$athletes[] = $row;
     	}
     	$stmt->close();
     	$db->close();
-    	return $athletes;
+   	return $athletes;
 }
 
 // Calculates total points for all Athlete in the given Season
