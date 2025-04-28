@@ -1,11 +1,10 @@
 <?php include(__DIR__.'/common/header.php');?>
-<body>
+<main class="container my-5">
     	<!-- Content Section -->
     	<div class="mx-auto px-auto my-5 py-5 text-center">
         	<h1 class="display-4 fw-bold">The Fantasy Fencing Project</h1>
         	<div class="col-lg-10 mx-auto">
         		<p class="fs-3 lead mb-3">Bringing international fencing to everyone!</p>
-        		<!--<a href="#" type="button" class="fs-5 btn btn-primary btn-large">About Us</a>-->
         	</div>
     	</div>
     	<div class="container mx-auto px-auto my-5 py-5">
@@ -34,5 +33,5 @@
     			</div>
     		</div>
     	</div>
-</body>
-</html>
+</main>
+<?php include(__DIR__.'/common/footer.php');?>

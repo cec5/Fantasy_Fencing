@@ -1,5 +1,4 @@
 <?php
-include(dirname(__DIR__).'/common/header.php');
 require_once(dirname(__DIR__).'/admin/adminValidation.php');
 require_once(dirname(__DIR__).'/../backend/php/scraper/scraperFunctions.php');
 require_once(dirname(__DIR__).'/../backend/php/databaseFunctions.php');
@@ -44,17 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manualSubmit'])) {
         	$success = false;
     	}
 }
+include(dirname(__DIR__).'/common/header.php');
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    	<meta charset="UTF-8">
-    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    	<title>Admin - Manage Athletes</title>
-</head>
-<body>
-<div class="container mt-5">
+<main class="container my-5">
     	<h2>Admin - Manage Athletes</h2>
 
     	<!-- Display result message at the top -->
@@ -123,6 +115,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manualSubmit'])) {
         	</div>
         	<button type="submit" class="btn btn-primary" name="manualSubmit">Add Athlete Manually</button>
     	</form>
-</div>
-</body>
-</html>
+</main>
+<?php include(dirname(__DIR__).'/common/footer.php');?>

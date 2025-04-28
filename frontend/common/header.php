@@ -19,8 +19,36 @@ if (isset($_COOKIE['auth_token'])) {
     	<base href="/">
     	<!-- Bootstrap CSS -->
     	<link href="common/css/bootstrap.min.css" rel="stylesheet">
+    	<style>
+		html, body {
+    			height: 100%;
+    			margin: 0;
+    			padding: 0;
+		}
+
+		body {
+    			display: flex;
+    			flex-direction: column;
+    			min-height:100vh;
+		}
+
+		.page-wrapper {
+    			display: flex;
+    			flex-direction: column;
+    			flex: 1;
+		}
+		
+		main {
+			flex: 1;
+		}
+		
+		footer {
+    			flex-shrink: 0;
+		}
+	</style>
 </head>
 <body>
+<div class="page-wrapper">
     	<!-- Navbar -->
     	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         	<div class="container">
@@ -83,7 +111,6 @@ if (isset($_COOKIE['auth_token'])) {
             	</div>
         	</div>
 	</nav>
-
     	<script src="common/js/bootstrap.bundle.min.js"></script>
     	<script>
         	// Logout function to clear the JWT cookie and redirect to the homepage
@@ -92,5 +119,3 @@ if (isset($_COOKIE['auth_token'])) {
             		window.location.href = 'index.php';
         	}
     	</script>
-</body>
-</html>

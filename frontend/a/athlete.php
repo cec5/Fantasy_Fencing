@@ -27,38 +27,34 @@ $twoLetterCountryCode = $countryCodeMap[$athlete['nationality']] ?? '';
 $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<body>
-    	<div class="container mt-5">
-        	<!-- Athlete Name as Main Title with Flag Emoji -->
-        	<h1>
-            		<?= htmlspecialchars($athlete['firstName'] . ' ' . $athlete['lastName'])?> 
-            		<?= $flagEmoji?>
-        	</h1>
+<main class="container my-5">
+        <!-- Athlete Name as Main Title with Flag Emoji -->
+        <h1>
+            	<?= htmlspecialchars($athlete['firstName'] . ' ' . $athlete['lastName'])?> 
+            	<?= $flagEmoji?>
+        </h1>
 
-        	<!-- Basic Information Row -->
-        	<div class="row mt-3 text-center">
-            		<div class="col-md-4">
-                		<div class="border p-3" style="font-size: 1.25rem;">
-                    			<strong>Gender</strong><br>
-                    			<?= ucfirst($athlete['gender']) ?>
-                		</div>
-            		</div>
+        <!-- Basic Information Row -->
+        <div class="row mt-3 text-center">
             	<div class="col-md-4">
+                	<div class="border p-3" style="font-size: 1.25rem;">
+                    		<strong>Gender</strong><br>
+                    		<?= ucfirst($athlete['gender']) ?>
+                	</div>
+            	</div>
+       		<div class="col-md-4">
                 	<div class="border p-3" style="font-size: 1.25rem;">
                     		<strong>Weapon(s)</strong><br>
                     		<?= htmlspecialchars(implode('/', array_map('ucfirst', $availableWeapons))) ?>
                 	</div>
-            	</div>
-            	<div class="col-md-4">
+        	</div>
+        	<div class="col-md-4">
                 	<div class="border p-3" style="font-size: 1.25rem;">
                     		<strong>Country</strong><br>
                     		<?= htmlspecialchars($validCountryCodes[$athlete['nationality']] ?? $athlete['nationality']) ?>
                 	</div>
-            	</div>
-        </div>
-
+        	</div>
+	</div>
         <!-- Season Tabs -->
         <ul class="nav nav-tabs mt-4" id="seasonTab" role="tablist">
             	<?php foreach ($seasons as $seasonCode => $seasonName):?>
@@ -120,7 +116,6 @@ $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
                     		</tr>
                 	<?php endforeach;?>
             	</tbody>
-        	</table>
-    	</div>
-</body>
-</html>
+        </table>
+</main>
+<?php include(dirname(__DIR__).'/common/footer.php');?>
