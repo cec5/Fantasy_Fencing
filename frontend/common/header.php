@@ -83,17 +83,17 @@ if (isset($_COOKIE['auth_token'])) {
             	</div>
         	</div>
 	</nav>
-	<!-- Footer -->
-	<footer class="bg-dark text-white text-center py-3 mt-5">
-    		<div class="container">
+	<!-- Footer
+	<footer class="fixed fixed-bottom container">
+    		<div class="bg-dark text-white text-center py-2 mt-2">
         		<small>
             			&copy; <?php echo date("Y"); ?> Fantasy Fencing Project | 
-            			<a href="about.php" class="text-white text-decoration-underline">About</a> |
-            			<a href="how-to-play.php" class="text-white text-decoration-underline">How to Play</a> |
-            			<a href="privacy_policy.php" class="text-white text-decoration-underline">Privacy Policy</a>
+            			<a href="/common/about.php" class="text-white text-decoration-underline">About</a> |
+            			<a href="/common/tutorial.php" class="text-white text-decoration-underline">Tutorial</a> |
+            			<a href="/common/privacy_policy.php" class="text-white text-decoration-underline">Privacy Policy</a>
        			 </small>
     		</div>
-	</footer>
+	</footer> -->
 
     	<script src="common/js/bootstrap.bundle.min.js"></script>
     	<script>
