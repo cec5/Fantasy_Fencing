@@ -11,10 +11,7 @@ $gender = $_GET['gender'] ?? '';
 $ageCategory = $_GET['ageCategory'] ?? '';
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<body>
-<div class="container mt-5">
+<main class="container my-5">
     	<h2>View/Manage Selections</h2>
 
     	<!-- Filter Form -->
@@ -182,6 +179,5 @@ $ageCategory = $_GET['ageCategory'] ?? '';
 		    	<?php endforeach; } ?>
 		</div>
     	</div>
-</div>
-</body>
-</html>
+</main>
+<?php include(dirname(__DIR__).'/common/footer.php');?>
