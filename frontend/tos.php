@@ -2,7 +2,7 @@
 <main class="container my-5">
     <h1>Terms of Service</h1>
 
-    <p><strong>Effective Date:</strong> [Insert Date]</p>
+    <p><strong>Effective Date:</strong> 5/1/2025</p>
 
     <p>Welcome to <strong>The Fantasy Fencing Project</strong>! These Terms of Service (“Terms”) govern your use of our website, services, and features (“Service”) provided by The Fantasy Fencing Project (“we,” “our,” or “us”).</p>
 
