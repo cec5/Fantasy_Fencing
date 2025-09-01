@@ -6,21 +6,21 @@ require_once(dirname(__DIR__) . '/../backend/php/otherFunctions.php');
 
 $athleteId = $_GET['id'];
 $season = $_GET['season'] ?? '2025';
-$ageCategory = $_GET['ageCategory'] ?? 'S';
+$ageCategory = $_GET['ageCategory'] ?? null;
 
 $athlete = getAthleteInfo($athleteId);
 $availableWeapons = getAthleteWeapons($athleteId);
-$weapon = $_GET['weapon'] ?? $availableWeapons[0]; // Set to primary weapon if not set
+$weapon = $_GET['weapon'] ?? $availableWeapons[0];
+$availableAgeCategories = getAthleteAgeCategories($athleteId, $season, $weapon);
+if ($ageCategory === null) {
+	$ageCategory = $availableAgeCategories[0] ?? 'S';
+} elseif (!in_array($ageCategory, $availableAgeCategories)) {
+	$ageCategory = $availableAgeCategories[0] ?? 'S';
+}
 $totalPoints = getTotalPoints($athleteId, $season, $weapon, $ageCategory);
 $results = getCompetitionResults($athleteId, $season, $weapon, $ageCategory);
 $twoLetterCountryCode = $countryCodeMap[$athlete['nationality']] ?? '';
 $flagEmoji = $twoLetterCountryCode ? getFlagEmoji($twoLetterCountryCode) : '';
-
-// New functions to handle dynamic age category filter
-$availableAgeCategories = getAthleteAgeCategories($athleteId, $season, $weapon);
-if (!in_array($ageCategory, $availableAgeCategories)) {
-	$ageCategory = $availableAgeCategories[0] ?? 'S';
-}
 ?>
 
 <main class="container my-5">
@@ -92,7 +92,8 @@ if (!in_array($ageCategory, $availableAgeCategories)) {
 
 	<!-- Total Points -->
 	<h4 class="mt-4">Total <?= ucfirst($ageCategories[$ageCategory] ?? 'Senior') ?> Points Earned:
-		<?= htmlspecialchars($totalPoints) ?></h4>
+		<?= htmlspecialchars($totalPoints) ?>
+	</h4>
 
 	<!-- Competition Results Table -->
 	<h5 class="mt-4"><?= ucfirst($ageCategories[$ageCategory] ?? 'Senior') ?> Competition Results</h5>
