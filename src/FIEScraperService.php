@@ -1,6 +1,6 @@
 <?php
 require_once(dirname(__DIR__) . '/vendor/autoload.php');
-require_once(__DIR__ . '/dataArrays.php');
+require_once(dirname(__DIR__) . '/src/dataArrays.php');
 
 use Smalot\PdfParser\Parser;
 
